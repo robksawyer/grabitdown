@@ -74,8 +74,8 @@ class User extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'File' => array(
-			'className' => 'File',
+		'Upload' => array(
+			'className' => 'Upload',
 			'foreignKey' => 'user_id',
 			'dependent' => false,
 			'conditions' => '',
