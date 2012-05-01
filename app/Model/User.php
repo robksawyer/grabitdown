@@ -352,7 +352,7 @@ class User extends AppModel {
 			$this->_removeExpiredRegistrations();
 
 			$this->set($postData);
-			//if ($this->validates()) {
+			if ($this->validates()) {
 				App::uses('Core', 'Security');
 				if($generatePassword === false){
 					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
@@ -363,9 +363,9 @@ class User extends AppModel {
 				
 				$this->create();
 				return $this->save($postData, false);
-			//}
+			}
 
-			//return false;
+			return false;
 		}
 
 	/**
