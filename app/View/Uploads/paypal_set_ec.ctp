@@ -1,0 +1,1 @@
+<script language='javascript'>//parent.opener.location.reload();</script>

@@ -35,7 +35,7 @@ class AppController extends Controller {
 	
 	public $theme = 'V1';
 	
-	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Text');
+	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Text','Js' => array('Jquery'));
 	public $components = array('Session', 'Email', 'Cookie');
 	
 	

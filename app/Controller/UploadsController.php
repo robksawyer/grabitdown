@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Vendor', 'Uploader.Uploader');
+App::uses('Vendor', 'Uploader.Uploader');
 /**
  * Uploads Controller
  *
@@ -58,8 +58,9 @@ class UploadsController extends AppController {
 									'maxNameLength' => 200
 									));
 									
-				//Accept payment 
-				
+				/*
+					TODO Accept payment 
+				*/
 
 				if ($data = $this->Uploader->upload('fileName')) {
 					// Upload successful, do whatever
@@ -233,4 +234,117 @@ class UploadsController extends AppController {
 		$this->Session->setFlash(__('Upload was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+	
+	/**
+	 * PAYPAL PAYMENT RELATED
+	 */
+	
+	public function payment() {
+		$payment_options = $this->Upload->Code->getPaymentOptions(); //Get the options array for the select list
+		$this->set(compact('payment_options'));
+	}
+
+	public function paypal_set_ec() {
+		if ($this->request->is('post')) {
+			//build nvp string
+			//use your own logic to get and set each variable
+			$returnURL = Router::url(array('controller'=>'uploads','action'=>'paypal_return'),true);
+			$cancelURL = Router::url(array('controller'=>'uploads','action'=>'paypal_cancel'),true);
+			
+			$codePrice = $this->Upload->Code->getPrice($this->request->data['Upload']['total_codes']);
+			
+			$currencyCode = 'USD';
+			$paymentAmount = $codePrice;
+			$paymentItemAmount = $codePrice;
+			$itemName = $this->Upload->Code->getItemName($this->request->data['Upload']['total_codes']);
+			$paymentQty = 1;
+			$totalPaymentAmount = $codePrice;
+			
+			$nvpStr=
+			 "RETURNURL=$returnURL&CANCELURL=$cancelURL"
+			."&PAYMENTREQUEST_0_CURRENCYCODE=$currencyCode"
+			."&PAYMENTREQUEST_0_AMT=$paymentAmount"
+			."&PAYMENTREQUEST_0_ITEMAMT=$paymentItemAmount"
+			."&PAYMENTREQUEST_0_PAYMENTACTION=Sale"
+			."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"
+			."&L_PAYMENTREQUEST_0_NAME0=$itemName"
+			."&L_PAYMENTREQUEST_0_AMT0=$totalPaymentAmount"
+			."&L_PAYMENTREQUEST_0_QTY0=$paymentQty"
+			."&NOSHIPPING=1"
+			;
+			//do paypal setECCheckout
+			App::import('Model','Paypal');
+			$paypal = new Paypal();
+			if($paypal->setExpressCheckout($nvpStr)) {
+				$result = $paypal->getPaypalUrl($paypal->token);
+			}else {
+				$this->log($paypal->errors);
+				$result = false;
+			}
+			
+			if(false !== $result) {
+				//The result should look like the following
+				//https://www.sandbox.paypal.com/incontext?token=EC-09N44269CG053064W
+				$this->redirect($result);
+			}else {
+				$this->Session->setFlash(__('Error while connecting to PayPal, Please try again', true));
+			}
+		}
+		
+		$payment_options = $this->Upload->Code->getPaymentOptions(); //Get the options array for the select list
+		$this->set(compact('payment_options'));
+	} 
+
+	/**
+	* page when user clicks on Cancel on Paypal page
+	*/
+	public function paypal_cancel($id=null) {
+		$this->layout = 'clean';
+		$this->render('paypal_back');
+	}
+
+	/**
+	 *redirects buyer after the buyer approves the payment
+	 */
+	public function paypal_return($id=null) {
+		$payerId	= $this->request->url['PayerID'];
+		$token		= $this->request->url['token'];
+		//get nvp string
+		//use your own logic to get and set each variable
+		$nvpStr=
+			 "TOKEN=$token&PAYERID=$payerId"
+			."&PAYMENTREQUEST_0_CURRENCYCODE=SGD"
+			."&PAYMENTREQUEST_0_AMT=10.00"	
+			."&PAYMENTREQUEST_0_ITEMAMT=10.00"
+			."&AYMENTREQUEST_0_PAYMENTACTION=Sale"
+			."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"  
+			."&L_PAYMENTREQUEST_0_NAME0=test"
+			."&L_PAYMENTREQUEST_0_QTY0=1"
+			."&L_PAYMENTREQUEST_0_AMT0=10.00"
+			;
+		
+		debug($nvpStr);
+		//do paypal setECCheckout
+		App::import('Model','Paypal');
+		$paypal = new Paypal();
+		if($paypal->doExpressCheckoutPayment($nvpStr)) {
+			$result = true;
+		}else {
+			$this->log($paypal->errors);
+			$result = false;
+		}
+
+		if (false == $result) {
+			$this->Session->setFlash(__('Error while making payment, Please try again', true),'default', array(), 'bad');
+		} else {
+			$this->Session->setFlash(__('Thank you for purchasing our deal.', true),'default', array(), 'good');
+		}
+		
+		$this->render('paypal_back');
+	}
+	
+	/**
+	 * END PAYPAL PAYMENT RELATED
+	 */
 }
+

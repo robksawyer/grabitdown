@@ -24,6 +24,12 @@ class Code extends AppModel {
 		)
 	);
 	
+	public $tenCodes = 5.00;
+	public $oneHundredCodes = 25.00;
+	public $oneThousandCodes = 50.00;
+	public $tenThousandCodes = 125.00;
+	public $oneHundredThousandCodes = 250.00;
+	
 /**
  * Generates a set of codes
  * 
@@ -73,5 +79,62 @@ class Code extends AppModel {
 			}
 		}
 		return $token;
+	}
+	
+	/**
+	 * Returns the code price
+	 *	@param int codeCount code count 
+	 */
+	public function getPrice($codeCount=0){
+		//Code prices 
+		$totalPrice = 0;
+		switch($codeCount){
+			case 0:
+				$totalPrice = 0;
+				break;
+			case 10:
+				$totalPrice = $this->tenCodes;
+				break;
+			case 100:
+				$totalPrice = $this->oneHundredCodes;
+				break;
+			case 1000:
+				$totalPrice = $this->oneThousandCodes;
+				break;
+			case 10000:
+				$totalPrice = $this->tenThousandCodes;
+				break;
+			case 100000:
+				$totalPrice = $this->oneHundredThousandCodes;
+				break;
+		}
+		return $totalPrice;
+	}
+	
+	public function getPaymentOptions(){
+		$payment_options = array(
+								'10'=>'10 $'.$this->tenCodes.' USD',
+								'100'=>'100 $'.$this->oneHundredCodes.' USD',
+								'1000'=>'1,000 $'.$this->oneThousandCodes.' USD',
+								'10000'=>'10,000 $'.$this->tenThousandCodes.' USD',
+								'100000'=>'100,000 $'.$this->oneHundredThousandCodes.' USD'
+								);
+		return $payment_options;
+	}
+	
+	/**
+	 * @param totalCodes The total number of codes the user is purchasing
+	 */
+	public function getItemName($totalCodes){
+		// called as CakeNumber
+		App::uses('CakeNumber', 'Utility');
+		$itemName = CakeNumber::format($totalCodes, array(
+		    'places' => 0,
+		    'before' => '',
+		    'escape' => false,
+		    'thousands' => ','
+		));
+		
+		return $itemName ." download codes";
 	}
 }
