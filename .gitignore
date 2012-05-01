@@ -1,1 +1,6 @@
 app/webroot/files/uploads/
+
+# Compiled source #
+###################
+*.mp3
+*.zip
