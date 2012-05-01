@@ -1,0 +1,15 @@
+ul.info{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+ul.info li{
+	display: inline;
+	padding: 0;
+	margin: 0 10px 5px 0;
+}
+ul.info li span.count{
+}
+ul.info li span.price{
+	color: green;
+}

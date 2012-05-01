@@ -31,4 +31,51 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+	
+	/**
+	 * Creates a unique slug
+	 */
+	function createSlug ($string, $id=null) {
+		$slug = Inflector::slug ($string,'-');
+		$slug = low ($slug);
+		$i = 0;
+		$params = array ();
+		$params ['conditions']= array();
+		$params ['conditions'][$this->name.'.slug']= $slug;
+		if (!is_null($id)) {
+			$params ['conditions']['not'] = array($this->name.'.id'=>$id);
+		}
+		while (count($this->find ('all',$params))) {
+			if (!preg_match ('/-{1}[0-9]+$/', $slug )) {
+				$slug .= '-' . ++$i;
+			} else {
+				$slug = preg_replace ('/[0-9]+$/', ++$i, $slug );
+			}
+			$params ['conditions'][$this->name . '.slug']= $slug;
+		}
+		return $slug;
+	}
+	
+	/**
+	 * Generates a unique token
+	 */
+	function generateToken($fileName = '',$secret = ''){
+		// Settings to generate the URI
+		$secret = $this->secret;             // Same as AuthTokenSecret
+		//$protectedPath = "/downloads/";        // Same as AuthTokenPrefix
+		$ipLimitation = true;                 // Same as AuthTokenLimitByIp
+		$hexTime = dechex(time());             // Time in Hexadecimal      
+		$fileName = $this->fileName;    // The file to access
+
+
+		// Let's generate the token depending if we set AuthTokenLimitByIp
+		if ($ipLimitation) {
+		  $token = md5($secret . $fileName . $hexTime . $_SERVER['REMOTE_ADDR']);
+		}else {
+		  $token = md5($secret . $fileName. $hexTime);
+		}
+
+		// We build the unique token
+		return $token;
+	}
 }
