@@ -76,20 +76,13 @@ class UploadsController extends AppController {
 					$this->request->data['Upload']['caption'] = $this->request->data['Upload']['custom_name'];
 					unset($this->request->data['Upload']['custom_name']);
 					
+					//Generate file codes
 					$this->request->data['Code'] = $this->Upload->Code->generateCodes($this->request->data,10);
-					
-					//$this->Upload->create();
 					if ($this->Upload->saveAll($this->request->data)) {
-						
 						//Set the upload id
 						$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
-						//Generate file codes
-						//if($this->Upload->Code->generateCodes($this->request->data,10)){
-								$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
-								$this->redirect(array('action' => 'index'));	
-						//}else{
-							//Unable to generate codes 
-						//}
+						$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
+						$this->redirect(array('action' => 'index'));
 					} else {
 						$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
 					}
