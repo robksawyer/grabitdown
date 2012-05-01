@@ -79,13 +79,13 @@ class User extends AppModel {
 		'Upload' => array(
 			'className' => 'Upload',
 			'foreignKey' => 'user_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
 			'offset' => '',
-			'exclusive' => '',
+			'exclusive' => true,
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)

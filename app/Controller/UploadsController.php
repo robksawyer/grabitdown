@@ -76,16 +76,13 @@ class UploadsController extends AppController {
 						//Generate file codes
 						$codes = $this->Upload->Code->generateCodes($this->request->data,10);
 						if(!empty($codes)){
-							$this->request->data['Upload']['Code'] = $codes;
+							$this->request->data['Code'] = $codes;
 						}else{
 							//Unable to generate codes 
 						}
-						
-						debug($this->Upload->validationErrors);
-						debug($this->Upload->User->validationErrors);
-						debug($this->Upload->Code->validationErrors);
+					
 						debug($this->request->data);
-						
+						$this->Upload->create();
 						if ($this->Upload->saveAll($this->request->data)) {
 							$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
 							//Set the upload id
