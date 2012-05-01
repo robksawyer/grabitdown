@@ -40,60 +40,61 @@ class UploadsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			
-			//Validate the entered data
-			//$this->Upload->set($this->request->data);
-			//if($this->Upload->validates()){
-				$this->request->data['User']['role'] = 'user'; //Set the default role
-				$user = $this->Upload->User->register($this->request->data);
-				if (!empty($user)) {
-					
-					//Create a folder based on the user's name
-					$userFolder = $this->request->data['User']['custom_path'];
-					
-					//http://milesj.me/code/cakephp/uploader
-					$this->Uploader = new Uploader(array(
-										'tempDir' => TMP,
-										'baseDir'	=> WWW_ROOT,
-										'uploadDir'	=> 'files/uploads/'.$userFolder.'/',
-										'maxNameLength' => 200
-										));
-										
-					//Accept payment 
-					
 
-					if ($data = $this->Uploader->upload('fileName')) {
-						// Upload successful, do whatever
-						//debug($data);
-						
-						//Add pertinent data to the array
-						$this->request->data['Upload'] = $data;
-						$this->request->data['Upload']['test_token'] = $this->Upload->generateToken($this->request->data['Upload']['name']);
-						$this->request->data['Upload']['test_token_active'] = 1;
-						$this->request->data['Upload']['active'] = 1;
-						$this->request->data['Upload']['user_id'] = $this->Upload->User->getLastInsertID();
-						
-						//Generate file codes
-						$codes = $this->Upload->Code->generateCodes($this->request->data,10);
-						if(!empty($codes)){
-							$this->request->data['Code'] = $codes;
-						}else{
-							//Unable to generate codes 
-						}
+			$this->request->data['User']['role'] = 'user'; //Set the default role
+			$userData['User'] = $this->request->data['User'];
+			$user = $this->Upload->User->register($userData);
+			if (!empty($user)) {
+				
+				//Create a folder based on the user's name
+				$userFolder = $this->request->data['User']['custom_path'];
+				unset($this->request->data['User']);
+				
+				//http://milesj.me/code/cakephp/uploader
+				$this->Uploader = new Uploader(array(
+									'tempDir' => TMP,
+									'baseDir'	=> WWW_ROOT,
+									'uploadDir'	=> 'files/uploads/'.$userFolder.'/',
+									'maxNameLength' => 200
+									));
+									
+				//Accept payment 
+				
+
+				if ($data = $this->Uploader->upload('fileName')) {
+					// Upload successful, do whatever
+					//debug($data);
 					
-						debug($this->request->data);
-						$this->Upload->create();
-						if ($this->Upload->saveAll($this->request->data)) {
-							$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
-							//Set the upload id
-							$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
-							$this->redirect(array('action' => 'index'));
-						} else {
-							$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
-						}
+					//Add pertinent data to the array
+					$totalCodes = $this->request->data['Upload']['total_codes'];
+					$this->request->data['Upload'] = $data;
+					$this->request->data['Upload']['total_codes'] = $totalCodes;
+					$this->request->data['Upload']['test_token'] = $this->Upload->generateToken($this->request->data['Upload']['name']);
+					$this->request->data['Upload']['test_token_active'] = 1;
+					$this->request->data['Upload']['active'] = 1;
+					$this->request->data['Upload']['user_id'] = $this->Upload->User->getLastInsertID();
+					$this->request->data['Upload']['caption'] = $this->request->data['Upload']['custom_name'];
+					unset($this->request->data['Upload']['custom_name']);
+					
+					$this->request->data['Code'] = $this->Upload->Code->generateCodes($this->request->data,10);
+					
+					//$this->Upload->create();
+					if ($this->Upload->saveAll($this->request->data)) {
+						
+						//Set the upload id
+						$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
+						//Generate file codes
+						//if($this->Upload->Code->generateCodes($this->request->data,10)){
+								$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
+								$this->redirect(array('action' => 'index'));	
+						//}else{
+							//Unable to generate codes 
+						//}
+					} else {
+						$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
 					}
-				}	
-			//}
+				}
+			}
 		}
 	
 		$users = $this->Upload->User->find('list');

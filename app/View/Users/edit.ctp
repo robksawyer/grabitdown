@@ -4,7 +4,7 @@
 		<legend><?php echo __('Edit User'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('username');
+		echo $this->Form->input('custom_path');
 		echo $this->Form->input('slug');
 		echo $this->Form->input('passwd');
 		echo $this->Form->input('password_token');

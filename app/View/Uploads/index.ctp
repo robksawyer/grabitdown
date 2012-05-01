@@ -26,7 +26,7 @@
 		<td><?php echo h($upload['Upload']['caption']); ?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['slug']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($upload['User']['username'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
+			<?php echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
 		</td>
 		<td><?php echo h($upload['Upload']['test_token']); ?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['test_token_count']); ?>&nbsp;</td>

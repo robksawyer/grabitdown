@@ -3,7 +3,7 @@
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id');?></th>
-			<th><?php echo $this->Paginator->sort('username');?></th>
+			<th><?php echo $this->Paginator->sort('custom_path');?></th>
 			<th><?php echo $this->Paginator->sort('slug');?></th>
 			<th><?php echo $this->Paginator->sort('passwd');?></th>
 			<th><?php echo $this->Paginator->sort('password_token');?></th>
@@ -25,7 +25,7 @@
 	foreach ($users as $user): ?>
 	<tr>
 		<td><?php echo h($user['User']['id']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
+		<td><?php echo h($user['User']['custom_path']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['slug']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['passwd']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['password_token']); ?>&nbsp;</td>

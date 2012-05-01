@@ -19,32 +19,12 @@ class Upload extends AppModel {
  *
  * @var array
  */
-	/*public $actsAs = array(
+	public $actsAs = array(
 		'Utils.Sluggable' => array(
 			'label' => 'name',
 			'method' => 'multibyteSlug'
 		),
 		'Uploader.FileValidation'
-	);*/
-		
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-	public $validate = array(
-		'total_codes' => array(
-			'required' => array(
-				'rule' => array('notEmpty'),
-				'required' => true, 
-				'allowEmpty' => false,
-				'message' => 'Please select the amount of codes that you\'d like to purchase.'
-			)
-		),
-		'fileName' => array(
-			'required' => array(
-				'rule' => array('notEmpty'),
-				'required' => true, 
-				'allowEmpty' => false,
-				'message' => 'Please select a file'
-			)
-		)
 	);
 	
 /**

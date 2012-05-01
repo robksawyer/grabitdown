@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add User'); ?></legend>
 	<?php
-		echo $this->Form->input('username');
+		echo $this->Form->input('custom_path');
 		echo $this->Form->input('slug');
 		echo $this->Form->input('passwd');
 		echo $this->Form->input('password_token');

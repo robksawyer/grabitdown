@@ -6,9 +6,9 @@
 			<?php echo h($user['User']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Username'); ?></dt>
+		<dt><?php echo __('Custom Path'); ?></dt>
 		<dd>
-			<?php echo h($user['User']['username']); ?>
+			<?php echo h($user['User']['custom_path']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Slug'); ?></dt>
