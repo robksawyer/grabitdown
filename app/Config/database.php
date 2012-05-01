@@ -65,7 +65,7 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'grabber',
 		'password' => '9Cs6rpnDyMWTJF2a',
-		'database' => 'grabitdown',
+		'database' => 'bandspreader',
 		'prefix' => '',
 		'encoding' => 'utf8'
 	);
