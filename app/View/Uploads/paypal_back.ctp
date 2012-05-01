@@ -8,6 +8,8 @@
 		window.close();
 	}else if (top.dg.isOpen() == true){
 		top.dg.closeFlow();
-	}
-	parent.opener.location.reload();*/
+	}*/
+	
+	//parent.opener.location.reload(); //Reload original page
+	//Submit the data to the add method
 </script>

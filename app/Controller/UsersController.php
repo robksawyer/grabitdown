@@ -83,9 +83,26 @@ class UsersController extends AppController {
 			throw new MethodNotAllowedException();
 		}
 		$this->User->id = $id;
+		$user = $this->User->read(null,$id);
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
+		
+		//Find all files created by the user and delete them
+		$uploads = $this->User->Upload->find('all',array('user_id'=>$id));
+		//Delete the physical files
+		$this->Uploader = new Uploader();
+		foreach($uploads as $upload){
+			$this->Uploader->delete($upload['Upload']['path']);
+		}
+		//Delete the container directory (custom_path)
+		$userFolderPath = $this->Uploader->baseDir.$this->Uploader->uploadDir.$user['User']['custom_path'];
+		if(!empty($userFolderPath)){
+			if (is_dir($userFolderPath)) {
+			    rmdir($userFolderPath);
+			}
+		}
+		
 		if ($this->User->delete()) {
 			$this->Session->setFlash(__('User deleted'));
 			$this->redirect(array('action' => 'index'));

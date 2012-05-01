@@ -37,19 +37,17 @@ class Code extends AppModel {
  * @param int codeCount Total codes to generate
  * @return array
  */
-	public function generateCodes($postData = null, $codeCount = 0) {
+	public function generateCodes($upload_id = null, $codeCount = 0) {
 		if ($codeCount > 0) {
 			for($i=0;$i<$codeCount;$i++){
 				$postData[$this->alias][$i] = array();
-				//$postData[$this->alias][$i]['upload_id'] = $postData['Upload']['id'];
+				$postData[$this->alias][$i]['upload_id'] = $upload_id;
 				$postData[$this->alias][$i]['token'] = $this->generateToken(25);
 				$postData[$this->alias][$i]['active'] = 1;
 			}
-			/*unset($postData['Upload']);
 			if($this->saveAll($postData,array('validate'=>'none'))){
 				return true;
-			}*/
-			return $postData[$this->alias];
+			}
 		}
 			
 		return false;

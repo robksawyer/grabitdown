@@ -39,12 +39,11 @@ class UploadsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-
+			
 			$this->request->data['User']['role'] = 'user'; //Set the default role
 			$userData['User'] = $this->request->data['User'];
 			$user = $this->Upload->User->register($userData);
 			if (!empty($user)) {
-				
 				//Create a folder based on the user's name
 				$userFolder = $this->request->data['User']['custom_path'];
 				unset($this->request->data['User']);
@@ -57,39 +56,36 @@ class UploadsController extends AppController {
 									'maxNameLength' => 200
 									));
 									
-				/*
-					TODO Accept payment 
-				*/
-
+				
 				if ($data = $this->Uploader->upload('fileName')) {
 					// Upload successful, do whatever
 					//debug($data);
 					
 					//Add pertinent data to the array
-					$totalCodes = $this->request->data['Upload']['total_codes'];
 					$this->request->data['Upload'] = $data;
-					$this->request->data['Upload']['total_codes'] = $totalCodes;
 					$this->request->data['Upload']['test_token'] = $this->Upload->generateToken($this->request->data['Upload']['name']);
 					$this->request->data['Upload']['test_token_active'] = 1;
-					$this->request->data['Upload']['active'] = 1;
+					$this->request->data['Upload']['active'] = 0; //Disable until the user pays
 					$this->request->data['Upload']['user_id'] = $this->Upload->User->getLastInsertID();
 					$this->request->data['Upload']['caption'] = $this->request->data['Upload']['custom_name'];
 					unset($this->request->data['Upload']['custom_name']);
 					
-					//Generate file codes
-					$this->request->data['Code'] = $this->Upload->Code->generateCodes($this->request->data,10);
-					if ($this->Upload->saveAll($this->request->data)) {
+					$this->Upload->create();
+					if ($this->Upload->save($this->request->data)) {
 						//Set the upload id
 						$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
-						$this->Session->setFlash(__('Congratulations! Your account has been created and your file codes have been generated.'));
-						$this->redirect(array('action' => 'index'));
+						$this->Session->setFlash(__('Congratulations! Your almost done – just pay and you\'re done.'));
+						$this->redirect(array('action' => 'payment',
+											'uid'=>$this->request->data['Upload']['id'],
+											'uuid'=>$this->Upload->User->getLastInsertID()
+											));
 					} else {
 						$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
 					}
 				}
 			}
 		}
-	
+		
 		$users = $this->Upload->User->find('list');
 		$this->set(compact('users'));
 	}
@@ -238,9 +234,19 @@ class UploadsController extends AppController {
 	 * PAYPAL PAYMENT RELATED
 	 */
 	
+	/**
+	 * @param int upload_id
+	 */
 	public function payment() {
-		$payment_options = $this->Upload->Code->getPaymentOptions(); //Get the options array for the select list
-		$this->set(compact('payment_options'));
+		if(!empty($this->request->named['uid']) && !empty($this->request->named['uuid'])){
+			$payment_options = $this->Upload->Code->getPaymentOptions(); //Get the options array for the select list
+			$upload_id = $this->request->named['uid'];
+			$user_id = $this->request->named['uuid'];
+			$this->set(compact('payment_options','upload_id','user_id'));
+		}else{
+			$this->Session->setFlash(__('There was an error with your entry.'));
+			$this->redirect(array('action' => 'add'));
+		}
 	}
 
 /**
@@ -249,7 +255,6 @@ class UploadsController extends AppController {
  */
 	public function paypal_set_ec() {
 		if ($this->request->is('post')) {
-			
 			//do paypal setECCheckout
 			App::import('Model','Paypal');
 			$paypal = new Paypal();
@@ -263,10 +268,13 @@ class UploadsController extends AppController {
 				$result = false;
 			}
 			
+			//debug($this->request);
+			
 			if(false !== $result) {
 				//The result should look like the following
 				//https://www.sandbox.paypal.com/incontext?token=EC-09N44269CG053064W
-				$this->redirect($result);
+				$params = "&uuid=".$this->request->data['Upload']['user_id']."&uid=".$this->request->data['Upload']['id'];
+				$this->redirect($result.$params);
 			}else {
 				$this->Session->setFlash(__('Error while connecting to PayPal, Please try again', true));
 			}
@@ -287,19 +295,22 @@ class UploadsController extends AppController {
 	/**
 	 * Redirects buyer after the buyer approves the payment
 	 */
-	public function paypal_return($totalCodes=null) {
+	public function paypal_return() {
+		$this->layout = 'clean';
+		
 		$payerId	= $this->request->query['PayerID'];
 		$token		= $this->request->query['token'];
-		
 		/*
 		 	If the buyer approves payment,you can optionally call GetExpressCheckoutDetails 
 			to obtain buyer details to display to your webpage.
 		*/
+		debug($this->request);
 		
 		//do paypal setECCheckout
 		App::import('Model','Paypal');
 		$paypal = new Paypal();
 		//Build the NVP string
+		$totalCodes = $this->request->named['total_codes'];
 		$codePrice = $this->Upload->Code->getPrice($totalCodes);
 		$itemName = $this->Upload->Code->getItemName($totalCodes);
 		$nvpCheckoutStr = $paypal->buildNVPCheckoutString($token,$payerId,$codePrice,$itemName);
@@ -311,11 +322,24 @@ class UploadsController extends AppController {
 		}
 		
 		if ($result === false) {
-			$this->Session->setFlash(__('Error while making payment, Please try again', true),'default', array(), 'bad');
+			$this->Session->setFlash(__('Error while making payment, Please try again', true),'message_fail');
 		} else {
-			$this->Session->setFlash(__('Thank you for purchasing.', true),'default', array(), 'good');
+			$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
+			
+			//Generate file codes
+			$this->request->data['Code'] = $this->Upload->Code->generateCodes($this->request->named['uid'],$this->request->named['total_codes']);
+			
+			//Add the total codes to the uploaded file for easy calculation
+			$this->Upload->read(null, $this->request->named['uid']);
+			$this->Upload->set(array(
+									'total_codes' => $this->request->named['total_codes'],
+									'active' => 1
+									)
+								);
+			$this->Upload->save();
 		}
-		//$this->render('paypal_back');
+		
+		$this->render('paypal_back');
 	}
 	
 	/**

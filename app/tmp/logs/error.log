@@ -818,3 +818,45 @@
     [L_SEVERITYCODE0] => Error
 )
 
+2012-05-01 22:48:04 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'total_codes' cannot be null
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(437): PDOStatement->execute(Array)
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(403): DboSource->_execute('INSERT INTO `ba...', Array)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(985): DboSource->execute('INSERT INTO `ba...')
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1705): DboSource->create(Object(Upload), Array, Array)
+#4 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(2219): Model->save(Array, Array)
+#5 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(2007): Model->saveAssociated(Array, Array)
+#6 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(77): Model->saveAll(Array)
+#7 [internal function]: UploadsController->add()
+#8 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UploadsController), Array)
+#9 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#10 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#11 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2012-05-01 23:18:20 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'total_codes' cannot be null
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(437): PDOStatement->execute(Array)
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(403): DboSource->_execute('INSERT INTO `ba...', Array)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(985): DboSource->execute('INSERT INTO `ba...')
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1705): DboSource->create(Object(Upload), Array, Array)
+#4 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(335): Model->save()
+#5 [internal function]: UploadsController->paypal_return('10')
+#6 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UploadsController), Array)
+#7 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#9 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-05-01 23:23:59 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T23%3a24%3a00Z
+    [CORRELATIONID] => 6fcf9e7b5c8f0
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-01 23:42:39 Error: [MissingControllerException] Controller class UploadController could not be found.
+#0 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

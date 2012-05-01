@@ -16,18 +16,10 @@
 					'error' => __('You must verify you have read the Terms of Service')
 					)
 				);
-		$options = array('10'=>'10','100'=>'100','1000'=>'1,000','10000'=>'10,000','100000'=>'100,000');
-		echo $this->Form->input('total_codes',array(
-			'type' => 'select',
-			'options' => $options,
-			'selected' => 0,
-			'label' => 'Total codes to generate',
-			'before' => '<ul class="info"><li>10 = <span class="price">$5</span></li><li>100 = <span class="price">$25</span></li><li>1,000 = <span class="price">$50</span></li><li>10,000 = <span class="price">$125</span></li><li>100,000 = <span class="price">$250</span></li></ul>'
-		));
 		echo $this->Form->input('fileName', array('type' => 'file'));
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Upload'));?>
+<?php echo $this->Form->submit(__('Upload'));?>
 </div>
 <div class="actions" style="display: none;">
 	<h3><?php echo __('Actions'); ?></h3>
