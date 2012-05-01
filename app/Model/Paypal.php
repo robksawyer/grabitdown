@@ -69,7 +69,7 @@ class Paypal extends AppModel {
  
 		// Set the API operation, version, and API signature in the request.
 		$nvpreq = "METHOD=$methodName&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature&$nvpStr";
- 
+
 		// Set the request as a POST FIELD for curl.
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
  
@@ -132,11 +132,77 @@ class Paypal extends AppModel {
 		// Execute the API operation; see the PPHttpPost function above.
 		$httpParsedResponseAr = $this->PPHttpPost('DoExpressCheckoutPayment', $nvpStr);
 		if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
-			$this->transId = urldecode($httpParsedResponseAr["PAYMENTINFO_0_TRANSACTIONID"]); 
+			$this->transId = urldecode($httpParsedResponseAr["PAYMENTINFO_0_TRANSACTIONID"]);
 			return true;
 		} else	{
 			$this->errors = $httpParsedResponseAr;
 			return false;
 		}		
+	}
+	
+	/**
+	 * Builds the NVP String
+	* @param int codePrice
+	* @param string itemName 
+	* @param int totalCodes 
+	* Example: 'RETURNURL=http://grabitdown/uploads/paypal_return/100&CANCELURL=http://grabitdown/uploads/paypal_cancel&PAYMENTREQUEST_0_CURRENCYCODE=USD&PAYMENTREQUEST_0_AMT=25&PAYMENTREQUEST_0_ITEMAMT=25&PAYMENTREQUEST_0_PAYMENTACTION=Sale&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital&L_PAYMENTREQUEST_0_NAME0=100 download codes&L_PAYMENTREQUEST_0_AMT0=25&L_PAYMENTREQUEST_0_QTY0=1&NOSHIPPING=1'
+	 */
+	public function buildNVPString($codePrice = 0,$itemName = '',$totalCodes = 0){
+		//build nvp string
+		//use your own logic to get and set each variable
+		$returnURL = Router::url(array('controller'=>'uploads','action'=>'paypal_return',$totalCodes),true);
+		$cancelURL = Router::url(array('controller'=>'uploads','action'=>'paypal_cancel'),true);
+		
+		$currencyCode = 'USD';
+		$paymentAmount = $codePrice;
+		$paymentItemAmount = $codePrice;
+		$paymentQty = 1;
+		$totalPaymentAmount = $codePrice;
+		
+		$nvpStr =
+		 "RETURNURL=$returnURL&CANCELURL=$cancelURL"
+		."&PAYMENTREQUEST_0_CURRENCYCODE=$currencyCode"
+		."&PAYMENTREQUEST_0_AMT=$paymentAmount"
+		."&PAYMENTREQUEST_0_ITEMAMT=$paymentItemAmount"
+		."&PAYMENTREQUEST_0_PAYMENTACTION=Sale"
+		."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"
+		."&L_PAYMENTREQUEST_0_NAME0=$itemName"
+		."&L_PAYMENTREQUEST_0_AMT0=$totalPaymentAmount"
+		."&L_PAYMENTREQUEST_0_QTY0=$paymentQty"
+		."&NOSHIPPING=1"
+		;
+		
+		return $nvpStr;
+	}
+	
+	/**
+	 * Builds the NVP String
+	* @param int codePrice
+	* @param string itemName 
+	* @param int totalCodes 
+	* Example: 'RETURNURL=http://grabitdown/uploads/paypal_return/100&CANCELURL=http://grabitdown/uploads/paypal_cancel&PAYMENTREQUEST_0_CURRENCYCODE=USD&PAYMENTREQUEST_0_AMT=25&PAYMENTREQUEST_0_ITEMAMT=25&PAYMENTREQUEST_0_PAYMENTACTION=Sale&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital&L_PAYMENTREQUEST_0_NAME0=100 download codes&L_PAYMENTREQUEST_0_AMT0=25&L_PAYMENTREQUEST_0_QTY0=1&NOSHIPPING=1'
+	 */
+	public function buildNVPCheckoutString($token='',$payerId=null,$codePrice = 0,$itemName = ''){
+		//build nvp string
+		$currencyCode = 'USD';
+		$paymentAmount = $codePrice;
+		$paymentItemAmount = $codePrice;
+		$paymentQty = 1;
+		$totalPaymentAmount = $codePrice;
+		
+		$nvpStr =
+		 "TOKEN=$token&PAYERID=$payerId"
+		."&PAYMENTREQUEST_0_CURRENCYCODE=$currencyCode"
+		."&PAYMENTREQUEST_0_AMT=$paymentAmount"
+		."&PAYMENTREQUEST_0_ITEMAMT=$paymentItemAmount"
+		."&PAYMENTREQUEST_0_PAYMENTACTION=Sale"
+		."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"
+		."&L_PAYMENTREQUEST_0_NAME0=$itemName"
+		."&L_PAYMENTREQUEST_0_AMT0=$totalPaymentAmount"
+		."&L_PAYMENTREQUEST_0_QTY0=$paymentQty"
+		."&NOSHIPPING=1"
+		;
+		
+		return $nvpStr;
 	}
 }

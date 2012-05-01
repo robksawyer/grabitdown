@@ -1,1 +1,1 @@
-<script language='javascript'>//parent.opener.location.reload();</script>
+<script language='javascript'>parent.opener.location.reload();</script>

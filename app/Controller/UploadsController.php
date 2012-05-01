@@ -8,7 +8,6 @@ App::uses('Vendor', 'Uploader.Uploader');
  */
 class UploadsController extends AppController {
 
-	
 /**
  * index method
  *
@@ -244,37 +243,19 @@ class UploadsController extends AppController {
 		$this->set(compact('payment_options'));
 	}
 
+/**
+ * Starts the transaction and gets the token. Afterwards it's passed off to the final transaction method.
+ * @param 
+ */
 	public function paypal_set_ec() {
 		if ($this->request->is('post')) {
-			//build nvp string
-			//use your own logic to get and set each variable
-			$returnURL = Router::url(array('controller'=>'uploads','action'=>'paypal_return'),true);
-			$cancelURL = Router::url(array('controller'=>'uploads','action'=>'paypal_cancel'),true);
 			
-			$codePrice = $this->Upload->Code->getPrice($this->request->data['Upload']['total_codes']);
-			
-			$currencyCode = 'USD';
-			$paymentAmount = $codePrice;
-			$paymentItemAmount = $codePrice;
-			$itemName = $this->Upload->Code->getItemName($this->request->data['Upload']['total_codes']);
-			$paymentQty = 1;
-			$totalPaymentAmount = $codePrice;
-			
-			$nvpStr=
-			 "RETURNURL=$returnURL&CANCELURL=$cancelURL"
-			."&PAYMENTREQUEST_0_CURRENCYCODE=$currencyCode"
-			."&PAYMENTREQUEST_0_AMT=$paymentAmount"
-			."&PAYMENTREQUEST_0_ITEMAMT=$paymentItemAmount"
-			."&PAYMENTREQUEST_0_PAYMENTACTION=Sale"
-			."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"
-			."&L_PAYMENTREQUEST_0_NAME0=$itemName"
-			."&L_PAYMENTREQUEST_0_AMT0=$totalPaymentAmount"
-			."&L_PAYMENTREQUEST_0_QTY0=$paymentQty"
-			."&NOSHIPPING=1"
-			;
 			//do paypal setECCheckout
 			App::import('Model','Paypal');
 			$paypal = new Paypal();
+			$codePrice = $this->Upload->Code->getPrice($this->request->data['Upload']['total_codes']);
+			$itemName = $this->Upload->Code->getItemName($this->request->data['Upload']['total_codes']);
+			$nvpStr = $paypal->buildNVPString($codePrice,$itemName,$this->request->data['Upload']['total_codes']);
 			if($paypal->setExpressCheckout($nvpStr)) {
 				$result = $paypal->getPaypalUrl($paypal->token);
 			}else {
@@ -304,43 +285,37 @@ class UploadsController extends AppController {
 	}
 
 	/**
-	 *redirects buyer after the buyer approves the payment
+	 * Redirects buyer after the buyer approves the payment
 	 */
-	public function paypal_return($id=null) {
-		$payerId	= $this->request->url['PayerID'];
-		$token		= $this->request->url['token'];
-		//get nvp string
-		//use your own logic to get and set each variable
-		$nvpStr=
-			 "TOKEN=$token&PAYERID=$payerId"
-			."&PAYMENTREQUEST_0_CURRENCYCODE=SGD"
-			."&PAYMENTREQUEST_0_AMT=10.00"	
-			."&PAYMENTREQUEST_0_ITEMAMT=10.00"
-			."&AYMENTREQUEST_0_PAYMENTACTION=Sale"
-			."&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital"  
-			."&L_PAYMENTREQUEST_0_NAME0=test"
-			."&L_PAYMENTREQUEST_0_QTY0=1"
-			."&L_PAYMENTREQUEST_0_AMT0=10.00"
-			;
+	public function paypal_return($totalCodes=null) {
+		$payerId	= $this->request->query['PayerID'];
+		$token		= $this->request->query['token'];
 		
-		debug($nvpStr);
+		/*
+		 	If the buyer approves payment,you can optionally call GetExpressCheckoutDetails 
+			to obtain buyer details to display to your webpage.
+		*/
+		
 		//do paypal setECCheckout
 		App::import('Model','Paypal');
 		$paypal = new Paypal();
-		if($paypal->doExpressCheckoutPayment($nvpStr)) {
+		//Build the NVP string
+		$codePrice = $this->Upload->Code->getPrice($totalCodes);
+		$itemName = $this->Upload->Code->getItemName($totalCodes);
+		$nvpCheckoutStr = $paypal->buildNVPCheckoutString($token,$payerId,$codePrice,$itemName);
+		if($paypal->doExpressCheckoutPayment($nvpCheckoutStr)) {
 			$result = true;
 		}else {
 			$this->log($paypal->errors);
 			$result = false;
 		}
-
-		if (false == $result) {
+		
+		if ($result === false) {
 			$this->Session->setFlash(__('Error while making payment, Please try again', true),'default', array(), 'bad');
 		} else {
-			$this->Session->setFlash(__('Thank you for purchasing our deal.', true),'default', array(), 'good');
+			$this->Session->setFlash(__('Thank you for purchasing.', true),'default', array(), 'good');
 		}
-		
-		$this->render('paypal_back');
+		//$this->render('paypal_back');
 	}
 	
 	/**

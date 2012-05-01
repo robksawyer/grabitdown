@@ -567,3 +567,254 @@
     [L_SEVERITYCODE0] => Error
 )
 
+2012-05-01 19:46:53 Error: [MissingConnectionException] Database connection "SQLSTATE[42000] [1044] Access denied for user 'grabber'@'localhost' to database 'bandspreader'" is missing, or could not be created.
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(245): Mysql->connect()
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Model/ConnectionManager.php(101): DboSource->__construct(Array)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(3382): ConnectionManager::getDataSource('default')
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1083): Model->setDataSource('default')
+#4 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(3408): Model->setSource('uploads')
+#5 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1276): Model->getDataSource()
+#6 /Users/robsa/Sites/grabitdown/lib/Cake/View/Helper/FormHelper.php(196): Model->schema()
+#7 /Users/robsa/Sites/grabitdown/lib/Cake/View/Helper/FormHelper.php(450): FormHelper->_introspectModel('Upload', 'fields')
+#8 /Users/robsa/Sites/grabitdown/app/View/Uploads/payment.ctp(2): FormHelper->create('Upload', Array)
+#9 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(908): include('/Users/robsa/Si...')
+#10 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(872): View->_evaluate('/Users/robsa/Si...', Array)
+#11 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(463): View->_render('/Users/robsa/Si...')
+#12 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#13 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#14 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#15 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#16 {main}
+2012-05-01 19:46:55 Error: [MissingConnectionException] Database connection "SQLSTATE[42000] [1044] Access denied for user 'grabber'@'localhost' to database 'bandspreader'" is missing, or could not be created.
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Datasource/DboSource.php(245): Mysql->connect()
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Model/ConnectionManager.php(101): DboSource->__construct(Array)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(3382): ConnectionManager::getDataSource('default')
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1083): Model->setDataSource('default')
+#4 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(3408): Model->setSource('uploads')
+#5 /Users/robsa/Sites/grabitdown/lib/Cake/Model/Model.php(1276): Model->getDataSource()
+#6 /Users/robsa/Sites/grabitdown/lib/Cake/View/Helper/FormHelper.php(196): Model->schema()
+#7 /Users/robsa/Sites/grabitdown/lib/Cake/View/Helper/FormHelper.php(450): FormHelper->_introspectModel('Upload', 'fields')
+#8 /Users/robsa/Sites/grabitdown/app/View/Uploads/payment.ctp(2): FormHelper->create('Upload', Array)
+#9 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(908): include('/Users/robsa/Si...')
+#10 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(872): View->_evaluate('/Users/robsa/Si...', Array)
+#11 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(463): View->_render('/Users/robsa/Si...')
+#12 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#13 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#14 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#15 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#16 {main}
+2012-05-01 19:50:40 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T19%3a50%3a36Z
+    [CORRELATIONID] => 58d569408f5d6
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10400
+    [L_ERRORCODE1] => 10406
+    [L_SHORTMESSAGE0] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_SHORTMESSAGE1] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Order%20total%20is%20missing%2e
+    [L_LONGMESSAGE1] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+)
+
+2012-05-01 19:52:04 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T19%3a52%3a04Z
+    [CORRELATIONID] => 6d37cfd0623de
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10400
+    [L_ERRORCODE1] => 10406
+    [L_SHORTMESSAGE0] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_SHORTMESSAGE1] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Order%20total%20is%20missing%2e
+    [L_LONGMESSAGE1] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+)
+
+2012-05-01 19:53:35 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T19%3a53%3a35Z
+    [CORRELATIONID] => d14ca39fcfe25
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10400
+    [L_ERRORCODE1] => 10406
+    [L_SHORTMESSAGE0] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_SHORTMESSAGE1] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Order%20total%20is%20missing%2e
+    [L_LONGMESSAGE1] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+)
+
+2012-05-01 19:57:55 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T19%3a57%3a55Z
+    [CORRELATIONID] => 1ffbe998125d6
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10408
+    [L_ERRORCODE1] => 10419
+    [L_ERRORCODE2] => 10406
+    [L_SHORTMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_SHORTMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_SHORTMESSAGE2] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_LONGMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_LONGMESSAGE2] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+    [L_SEVERITYCODE2] => Error
+)
+
+2012-05-01 19:59:28 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T19%3a59%3a28Z
+    [CORRELATIONID] => ea10befb3cc9
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10408
+    [L_ERRORCODE1] => 10419
+    [L_ERRORCODE2] => 10406
+    [L_SHORTMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_SHORTMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_SHORTMESSAGE2] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_LONGMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_LONGMESSAGE2] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+    [L_SEVERITYCODE2] => Error
+)
+
+2012-05-01 20:00:11 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T20%3a00%3a11Z
+    [CORRELATIONID] => ce150ecc1b1bb
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10408
+    [L_ERRORCODE1] => 10419
+    [L_ERRORCODE2] => 10406
+    [L_SHORTMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_SHORTMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_SHORTMESSAGE2] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_LONGMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_LONGMESSAGE2] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+    [L_SEVERITYCODE2] => Error
+)
+
+2012-05-01 20:01:46 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T20%3a01%3a46Z
+    [CORRELATIONID] => 75ac42b87ca0c
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10408
+    [L_ERRORCODE1] => 10419
+    [L_ERRORCODE2] => 10406
+    [L_SHORTMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_SHORTMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_SHORTMESSAGE2] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_LONGMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_LONGMESSAGE2] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+    [L_SEVERITYCODE2] => Error
+)
+
+2012-05-01 20:36:10 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T20%3a36%3a09Z
+    [CORRELATIONID] => 129394783b1be
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10408
+    [L_ERRORCODE1] => 10419
+    [L_ERRORCODE2] => 10406
+    [L_SHORTMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_SHORTMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_SHORTMESSAGE2] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => Express%20Checkout%20token%20is%20missing%2e
+    [L_LONGMESSAGE1] => Express%20Checkout%20PayerID%20is%20missing%2e
+    [L_LONGMESSAGE2] => The%20PayerID%20value%20is%20invalid%2e
+    [L_SEVERITYCODE0] => Error
+    [L_SEVERITYCODE1] => Error
+    [L_SEVERITYCODE2] => Error
+)
+
+2012-05-01 21:13:02 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T21%3a13%3a02Z
+    [CORRELATIONID] => 92401e6017c69
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10410
+    [L_SHORTMESSAGE0] => Invalid%20token
+    [L_LONGMESSAGE0] => Invalid%20token%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-01 21:16:34 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T21%3a16%3a33Z
+    [CORRELATIONID] => 89e0aded95523
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10410
+    [L_SHORTMESSAGE0] => Invalid%20token
+    [L_LONGMESSAGE0] => Invalid%20token%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-01 21:23:51 Error: [MissingViewException] View file "/Users/robsa/Sites/grabitdown/app/View/Themed/V1/Uploads/paypal_return.ctp" is missing.
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/View/View.php(460): View->_getViewFileName(NULL)
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-01 21:25:47 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T21%3a25%3a46Z
+    [CORRELATIONID] => e0142be284779
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10415
+    [L_SHORTMESSAGE0] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => A%20successful%20transaction%20has%20already%20been%20completed%20for%20this%20token%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-01 21:33:09 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d01T21%3a33%3a08Z
+    [CORRELATIONID] => b8bd1d006bd60
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10415
+    [L_SHORTMESSAGE0] => Transaction%20refused%20because%20of%20an%20invalid%20argument%2e%20See%20additional%20error%20messages%20for%20details%2e
+    [L_LONGMESSAGE0] => A%20successful%20transaction%20has%20already%20been%20completed%20for%20this%20token%2e
+    [L_SEVERITYCODE0] => Error
+)
+
