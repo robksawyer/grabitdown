@@ -59,7 +59,7 @@ class User extends AppModel {
 			),
 			'isUnique' => array(
 				'rule' => array('isUnique','email'),
-				'message' => 'This email is already in use.'
+				'message' => 'This email is already in use. Maybe you should login.'
 			)
 		),
 		'tos' => array(
