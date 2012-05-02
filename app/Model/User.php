@@ -31,6 +31,22 @@ class User extends AppModel {
  * @var array
  */
 	public $validate = array(
+		'fullname' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'required' => true, 
+				'allowEmpty' => false,
+				'message' => 'Please enter your name, so we\'ll know what to call you.'
+			),
+			'alpha' => array(
+				'rule'=>array('alphaNumeric'), 
+				'message' => 'Your name must be alphanumeric.'
+			),
+			'name_min' => array(
+				'rule' => array('minLength', '3'),
+				'message' => 'Your name must be more than 3 characters, right?'
+			)
+		),
 		'custom_path' => array(
 			'required' => array(
 				'rule' => array('notEmpty'),

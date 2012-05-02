@@ -3,6 +3,10 @@
 	<fieldset>
 		<legend><?php echo __('Add your track or an archive of \'em all.'); ?></legend>
 	<?php
+		echo $this->Form->input('User.fullname', array(
+				'label' => 'What\'s your name?'
+			)
+		);
 		echo $this->Form->input('User.custom_path', array(
 				'label' => 'Custom URL (This will be in the final file URL.)'
 			)
@@ -27,6 +31,7 @@
 		<li><?php echo $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?> </li>
 	</ul>
 </div>
-<div class="footnote">
-	<p>The following filetypes are accepted: aif,aifc,aiff,au,kar,mid,midi,mp2,mp3,mpga,ra,ram,rm,rpm,snd,tsi,wav,wma,gz,gtar,z,tgz,zip,rar,rev,tar,7z</p>
+<div class="clear"></div>
+<div class="bottom">
+	<p class="footnote">The following filetypes are currently accepted: aif,aifc,aiff,au,kar,mid,midi,mp2,mp3,mpga,ra,ram,rm,rpm,snd,tsi,wav,wma,gz,gtar,z,tgz,zip,rar,rev,tar,7z</p>
 </div>

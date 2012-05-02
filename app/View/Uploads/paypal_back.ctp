@@ -14,6 +14,6 @@
 		}else if (top.dg.isOpen() == true){
 			top.dg.closeFlow();
 		}
-	    parent.opener.location = "/uploads/admin";
+	    parent.opener.location = "/uploads/index";
 	}
 </script>

@@ -260,10 +260,12 @@ class UploadsController extends AppController {
 			
 			//Check to make sure that the total codes haven't already been added to this file
 			$upload = $this->Upload->read(null,$this->request->data['Upload']['id']);
-			if(intval($upload['Upload']['total_codes']) == count($upload['Code'])){
-				$this->Session->setFlash(__('Error! No more codes can be added to this upload. Please re-upload the file.', true),'message_fail');
-				$this->render('paypal_back_to_add');
-				return;
+			if(intval($upload['Upload']['total_codes']) > 0){
+				if(intval($upload['Upload']['total_codes']) == count($upload['Code'])){
+					$this->Session->setFlash(__('Error! No more codes can be added to this upload. Please re-upload the file.', true),'message_fail');
+					$this->render('paypal_back_to_add');
+					return;
+				}
 			}
 			
 			//do paypal setECCheckout

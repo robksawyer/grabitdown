@@ -13,3 +13,11 @@ ul.info li span.count{
 ul.info li span.price{
 	color: green;
 }
+.clear{
+	width: 100%;
+	clear: both;
+}
+.footnote{
+	font-size: 10px;
+	text-align: center;
+}
