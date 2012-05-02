@@ -1,5 +1,5 @@
 app/webroot/files/uploads/
-app/tmp
+app/tmp/
 
 # Compiled source #
 ###################
