@@ -372,7 +372,6 @@ class User extends AppModel {
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
 					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
-				
 				$this->create();
 				return $this->save($postData, false);
 			}
@@ -497,7 +496,7 @@ class User extends AppModel {
 			} else {
 				$postData[$this->alias]['email_authenticated'] = 1;
 			}
-			$postData[$this->alias]['active'] = 1;
+			$postData[$this->alias]['active'] = 0; //By default set the account to inactive
 			return $postData;
 		}
 		

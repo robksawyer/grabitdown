@@ -140,6 +140,8 @@ class UsersController extends AppController {
 			$this->Session->setFlash(__('Your changes were not saved and your account has been removed.', true));
 			$this->redirect(array('controller'=>'uploads','action' => 'add'));
 		}else{
+			//Find the recent upload and delete it along with the file uploaded
+			
 			$this->Session->setFlash(__('Your changes were not saved.', true));
 			$this->redirect(array('controller'=>'uploads','action' => 'add'));
 		}
