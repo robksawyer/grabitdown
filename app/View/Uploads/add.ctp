@@ -33,5 +33,5 @@
 </div>
 <div class="clear"></div>
 <div class="bottom">
-	<p class="footnote">The following filetypes are currently accepted: aif,aifc,aiff,au,kar,mid,midi,mp2,mp3,mpga,ra,ram,rm,rpm,snd,tsi,wav,wma,gz,gtar,z,tgz,zip,rar,rev,tar,7z</p>
+	<p class="footnote">The following filetypes are currently accepted: aif,aifc,aiff,au,kar,mid,midi,mp2,mp3,m4a,m4b,m4p,mpga,ra,ram,rm,rpm,snd,tsi,wav,wma,gz,gtar,z,tgz,zip,rar,rev,tar,7z</p>
 </div>

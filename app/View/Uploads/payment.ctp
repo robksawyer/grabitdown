@@ -1,7 +1,7 @@
 <div class="uploads form">
-	<h1><?php echo __("How many download codes would you like to buy?",true); ?></h1>
+	<h1><?php echo __("Welcome, ".$user['User']['fullname']."! How many download codes would you like to buy?",true); ?></h1>
 <?php 
-	echo $this->Form->create('Upload',array('url'=>array('action'=>'paypal_set_ec')));
+	echo $this->Form->create('Upload',array('url'=>array('action'=>'paypal_set_ec'),'target'=>'_self'));
 ?>
 	<fieldset>
 <?php
@@ -17,7 +17,8 @@
 ?>
 	</fieldset>
 <?php
-	echo $this->Form->submit('Pay now',array('id'=>'paypal-pay')); 
+	echo $this->Form->submit('Cancel',array('name'=>'cancel','id'=>'cancel-pay','div' => false));
+	echo $this->Form->submit('Pay now',array('name'=>'ok','id'=>'paypal-pay','div' => false));
 ?>
 </div>
 <!-- PayPal payment -->
@@ -26,7 +27,7 @@
 var dg = new PAYPAL.apps.DGFlow({
 	// the HTML ID of the form submit button which calls setEC
 	trigger: 'paypal-pay',
-	// the experience type: instant or mini
-	expType: 'instant'
+	// the experience type: light or mini
+	expType: 'mini'
 });
 </script>

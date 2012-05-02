@@ -83,13 +83,27 @@ class UsersController extends AppController {
 			throw new MethodNotAllowedException();
 		}
 		$this->User->id = $id;
-		$user = $this->User->read(null,$id);
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
 		
+		//Delete the user's data
+		$this->deleteUserData($id);
+		if ($this->User->delete()) {
+			$this->Session->setFlash(__('User deleted'));
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Session->setFlash(__('User was not deleted'));
+		$this->redirect(array('action' => 'index'));
+	}
+	
+	/**
+	 * Remove all of the user's old content
+	 */
+	public function deleteUserData($user_id=null){
+		$user = $this->User->read(null,$user_id);
 		//Find all files created by the user and delete them
-		$uploads = $this->User->Upload->find('all',array('user_id'=>$id));
+		$uploads = $this->User->Upload->find('all',array('user_id'=>$user_id));
 		//Delete the physical files
 		$this->Uploader = new Uploader();
 		foreach($uploads as $upload){
@@ -103,12 +117,32 @@ class UsersController extends AppController {
 			}
 		}
 		
-		if ($this->User->delete()) {
-			$this->Session->setFlash(__('User deleted'));
-			$this->redirect(array('action' => 'index'));
+		return true;
+	}
+	
+	/**
+	 * Clears the user's data.
+	 * The data is only cleared if the user account is not active. The account is likely not active because they didn't pay.
+	 */
+	public function clear_user_data($id=null){
+		$this->User->id = $id;
+		if (!$this->User->exists()) {
+			throw new NotFoundException(__('Invalid user'));
 		}
-		$this->Session->setFlash(__('User was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$user = $this->read(null,$id);
+		if(!$user['User']['active']){
+			//Delete the user's data
+			$this->deleteUserData($id);
+			if ($this->User->delete()) {
+				$this->Session->setFlash(__('User deleted'));
+				$this->redirect(array('action' => 'index'));
+			}
+			$this->Session->setFlash(__('Your changes were not saved and your account has been removed.', true));
+			$this->redirect(array('controller'=>'uploads','action' => 'add'));
+		}else{
+			$this->Session->setFlash(__('Your changes were not saved.', true));
+			$this->redirect(array('controller'=>'uploads','action' => 'add'));
+		}
 	}
 /**
  * admin_index method

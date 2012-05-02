@@ -244,7 +244,9 @@ class UploadsController extends AppController {
 			$payment_options = $this->Upload->Code->getPaymentOptions(); //Get the options array for the select list
 			$upload_id = $this->request->named['uid'];
 			$user_id = $this->request->named['uuid'];
-			$this->set(compact('payment_options','upload_id','user_id'));
+			//Get user account data
+			$user = $this->Upload->User->read(null,$user_id);
+			$this->set(compact('payment_options','upload_id','user_id','user'));
 		}else{
 			$this->Session->setFlash(__('There was an error with your entry.'));
 			$this->redirect(array('action' => 'add'));
@@ -257,7 +259,12 @@ class UploadsController extends AppController {
  */
 	public function paypal_set_ec() {
 		if ($this->request->is('post')) {
-			
+			// abort if cancel button was pressed
+			if (isset($this->request->data['cancel'])) {
+				//Pass the user along to an action that will clear the account and the upload
+				$this->redirect(array('controller'=>'users','action' => 'clear_user_data'));
+				break;
+			}
 			//Check to make sure that the total codes haven't already been added to this file
 			$upload = $this->Upload->read(null,$this->request->data['Upload']['id']);
 			if(intval($upload['Upload']['total_codes']) > 0){

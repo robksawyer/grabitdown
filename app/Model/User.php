@@ -38,10 +38,6 @@ class User extends AppModel {
 				'allowEmpty' => false,
 				'message' => 'Please enter your name, so we\'ll know what to call you.'
 			),
-			'alpha' => array(
-				'rule'=>array('alphaNumeric'), 
-				'message' => 'Your name must be alphanumeric.'
-			),
 			'name_min' => array(
 				'rule' => array('minLength', '3'),
 				'message' => 'Your name must be more than 3 characters, right?'
@@ -101,7 +97,7 @@ class User extends AppModel {
 			'order' => '',
 			'limit' => '',
 			'offset' => '',
-			'exclusive' => true,
+			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)

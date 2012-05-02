@@ -33,15 +33,15 @@ class Upload extends AppModel {
 						'extension'	=> array(
 								'value' => array(
 									'aif','aifc','aiff','au','kar','mid','midi','mp2','mp3',
-									'mpga','ra','ram','rm','rpm','snd','tsi','wav',
+									'mpga','ra','ram','rm','rpm','snd','tsi','wav','m4a','m4b','m4p',
 									'wma','gz','gtar','z','tgz','zip','rar','rev','tar','7z'
 								),
 								'error' => 'You cannot upload this type of file.'
-						),
-						'filesize' => array(
+						)
+						/*'filesize' => array(
 										'value' => 5242880,
 										'error' => 'This file is too large or small.'
-						)
+						)*/
 					)
 		)
 	);
