@@ -16,7 +16,7 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->authenticate = array('Form' => array('fields' => array('username' => 'email', 'password' => 'passwd')));
-		$this->Auth->allow('logout','clear_user_data');
+		$this->Auth->allow('logout','clear_user_data','delete');
 	}
 	
 	/**

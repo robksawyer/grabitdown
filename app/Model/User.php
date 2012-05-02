@@ -385,6 +385,7 @@ class User extends AppModel {
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
+					$postData[$this->alias]['tmp_passwd'] = $postData[$this->alias]['passwd']; //This one will be unhashed
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				$this->create();
@@ -413,6 +414,7 @@ class User extends AppModel {
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
+					$postData[$this->alias]['tmp_passwd'] = $postData[$this->alias]['passwd']; //This one will be unhashed
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				

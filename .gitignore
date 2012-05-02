@@ -1,6 +1,10 @@
 app/webroot/files/uploads/
 app/tmp/
 
+.DS_Store
+*_
+*~
+
 # Compiled source #
 ###################
 *.mp3
