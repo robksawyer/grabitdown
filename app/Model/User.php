@@ -406,6 +406,23 @@ class User extends AppModel {
 			// return false;
 		}
 	/**
+	 * Activates the user account
+	 * @param id int The user id to activate
+	 */
+	public function activate($id=null){
+		$user = $this->read(null,$id);
+		if(!empty($user)){
+			if($user['User']['active'] === 0){
+				$this->id = $id;
+				$this->set('active',1);
+				$this->save();
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Resends the verification if the user is not already validated or invalid
 	 *
 	 * @param array $postData Post data from controller

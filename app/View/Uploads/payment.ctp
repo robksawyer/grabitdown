@@ -1,7 +1,7 @@
 <div class="uploads form">
-	<h1><?php echo __("Welcome, ".$user['User']['fullname']."! How many download codes would you like to buy?",true); ?></h1>
+	<h1><?php echo __("How many download codes would you like to buy?",true); ?></h1>
 <?php 
-	echo $this->Form->create('Upload',array('url'=>array('action'=>'paypal_set_ec'),'target'=>'_self'));
+	echo $this->Form->create('Upload',array('url'=>array('action'=>'paypal_set_ec')));
 ?>
 	<fieldset>
 <?php

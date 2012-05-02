@@ -129,19 +129,19 @@ class UsersController extends AppController {
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
-		$user = $this->read(null,$id);
+		$user = $this->User->read(null,$id);
 		if(!$user['User']['active']){
 			//Delete the user's data
 			$this->deleteUserData($id);
 			if ($this->User->delete()) {
-				$this->Session->setFlash(__('User deleted'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Your changes were not saved and your account has been removed.', true));
+				$this->redirect(array('controller'=>'uploads','action' => 'add'));
 			}
-			$this->Session->setFlash(__('Your changes were not saved and your account has been removed.', true));
-			$this->redirect(array('controller'=>'uploads','action' => 'add'));
 		}else{
-			//Find the recent upload and delete it along with the file uploaded
-			
+			/*
+			 This should never happen because the user can't get past the add page if their 
+			account already exists. They have to upload new files via the admin area.
+			*/
 			$this->Session->setFlash(__('Your changes were not saved.', true));
 			$this->redirect(array('controller'=>'uploads','action' => 'add'));
 		}

@@ -963,3 +963,20 @@
 #1 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
 #2 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #3 {main}
+2012-05-02 09:32:55 Error: [NotFoundException] Invalid user
+#0 [internal function]: UsersController->clear_user_data()
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#3 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-02 10:06:42 Error: [MissingActionException] Action UsersController::login() could not be found.
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-05-02 10:07:06 Error: [MissingActionException] Action UsersController::login() could not be found.
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}

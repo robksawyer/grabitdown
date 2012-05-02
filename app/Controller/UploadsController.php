@@ -75,7 +75,7 @@ class UploadsController extends AppController {
 						if ($this->Upload->save($this->request->data)) {
 							//Set the upload id
 							$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
-							$this->Session->setFlash(__('Congratulations! Your almost done – just pay and you\'re done.'));
+							$this->Session->setFlash(__('Congratulations '.$user['User']['fullname'].'! You\'re almost done, we\'re just waiting for your payment.'));
 							$this->redirect(array('action' => 'payment',
 												'uid'=>$this->request->data['Upload']['id'],
 												'uuid'=>$this->Upload->User->getLastInsertID()
@@ -259,10 +259,10 @@ class UploadsController extends AppController {
  */
 	public function paypal_set_ec() {
 		if ($this->request->is('post')) {
-			// abort if cancel button was pressed
+			//Abort if cancel button was pressed
 			if (isset($this->request->data['cancel'])) {
 				//Pass the user along to an action that will clear the account and the upload
-				$this->redirect(array('controller'=>'users','action' => 'clear_user_data'));
+				$this->redirect(array('controller'=>'users','action' => 'clear_user_data',$this->request->data['Upload']['user_id']));
 				break;
 			}
 			//Check to make sure that the total codes haven't already been added to this file
@@ -354,6 +354,9 @@ class UploadsController extends AppController {
 			if($codeCreationResult === true){
 				//Codes generated successfully
 				$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
+				
+				//Activate the user account
+				$this->Upload->User->activate($user_id);
 				
 				//Add the total codes to the uploaded file for easy calculation
 				$this->Upload->read(null, $upload_id);
