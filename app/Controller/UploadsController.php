@@ -8,6 +8,11 @@ App::uses('Vendor', 'Uploader.Uploader');
  */
 class UploadsController extends AppController {
 
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allow('add');
+	}
+	
 /**
  * index method
  *
