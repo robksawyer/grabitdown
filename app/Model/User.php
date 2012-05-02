@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Controller/Component');
 /**
  * User Model
  *
@@ -79,6 +80,16 @@ class User extends AppModel {
 			'message' => 'You must agree to the terms of service.'
 		)
 	);
+	
+	/**
+	 * 
+	 */
+	public function beforeSave() {
+		if (isset($this->data[$this->alias]['passwd'])) {
+			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['passwd']);
+		}
+		return true;
+	}
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -253,8 +264,9 @@ class User extends AppModel {
 
 			$this->set($postData);
 			if ($this->validates()) {
-				App::uses('Core', 'Security');
-				$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+				//App::uses('Core', 'Security');
+				//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+				$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
 				$this->data[$this->alias]['password_token'] = null;
 				$result = $this->save($this->data, false);
 			}
@@ -274,8 +286,9 @@ class User extends AppModel {
 			$this->validate = $this->validatePasswordChange;
 
 			if ($this->validates()) {
-				App::uses('Core', 'Security');
-				$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+				//App::uses('Core', 'Security');
+				//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+				$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
 				$this->save($postData, array(
 					'validate' => false,
 					'callbacks' => false));
@@ -301,8 +314,9 @@ class User extends AppModel {
 			}
 
 			$passwd = $this->field('passwd', array($this->alias . '.id' => $this->data[$this->alias]['id']));
-			App::uses('Core', 'Security');
-			if ($passwd === Security::hash($password['old_password'], null, true)) {
+			//App::uses('Core', 'Security');
+			//if ($passwd === Security::hash($password['old_password'], null, true)) {
+			if ($passwd === AuthComponent::password($password['old_password'], null, true)) {
 				return true;
 			}
 			return false;
@@ -365,12 +379,13 @@ class User extends AppModel {
 
 			$this->set($postData);
 			if ($this->validates()) {
-				App::uses('Core', 'Security');
+				//App::uses('Core', 'Security');
 				if($generatePassword === false){
-					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
+					//Happens in beforeSave now
+					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
-					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
+					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				$this->create();
 				return $this->save($postData, false);
@@ -392,12 +407,13 @@ class User extends AppModel {
 
 			//$this->set($postData);
 			//if ($this->validates()) {
-				App::uses('Core', 'Security');
+				//App::uses('Core', 'Security');
 				if($generatePassword === false){
-					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
+					//Happens in beforeSave now
+					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
-					$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
+					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				
 				return $postData[$this->alias];

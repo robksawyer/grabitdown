@@ -34,9 +34,14 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
 	
 	public $theme = 'V1';
+	public $components = array('Auth' => array(
+											'loginRedirect' => array('controller' => 'uploads', 'action' => 'admin'),
+											'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home')
+											),'Session', 'Email', 'Cookie');
+	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Text','Js' => array('Jquery'));
 	
-	public $helpers = array('Auth','Html', 'Form', 'Session', 'Time', 'Text','Js' => array('Jquery'));
-	public $components = array('Session', 'Email', 'Cookie');
-	
+	public function beforeFilter() {
+		$this->Auth->allow('index', 'view');
+	}
 	
 }
