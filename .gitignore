@@ -1,9 +1,22 @@
 app/webroot/files/uploads/
 app/tmp/
 
-.DS_Store
 *_
+*.diff
+*.err
+*.orig
+*.rej
+*.swo
+*.swp
+*.vi
+*.old
 *~
+.DS_Store
+.cache
+.project
+.settings
+.svn
+errors.err
 
 # Compiled source #
 ###################
