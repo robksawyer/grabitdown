@@ -39,23 +39,26 @@ class Code extends AppModel {
  */
 	public function generateCodes($upload_id = null, $codeCount = 0) {
 		if ($codeCount > 0) {
-			for($i=0;$i<$codeCount;$i++){
-				$postData[$this->alias][$i] = array();
-				$postData[$this->alias][$i]['upload_id'] = $upload_id;
-				$postData[$this->alias][$i]['token'] = $this->generateToken(25);
-				$postData[$this->alias][$i]['active'] = 1;
-			}
-			if($this->saveAll($postData,array('validate'=>'none'))){
-				return true;
+			//Check to make sure that the upload doesn't already have the total amount codes allowed for it.
+			$upload = $this->Upload->read(null,$upload_id);
+			if(count($upload['Code']) < 1){
+				//No codes exist
+				for($i=0;$i<$codeCount;$i++){
+					$postData[$i][$this->alias]['upload_id'] = $upload_id;
+					$postData[$i][$this->alias]['token'] = $this->generateToken(25);
+					$postData[$i][$this->alias]['active'] = 1;
+				}
+				if($this->saveAll($postData)){
+					return true;
+				}
+			}else{
+				//There are some codes already added for this upload
+				$totalCodesAdded = count($upload['Code']);
+				$diff = abs($upload['Upload']['total_codes'] - $totalCodesAdded);
 			}
 		}
 			
 		return false;
-		
-		/*$this->create();
-		if ($this->saveAll($postData)) {
-			return true;
-		}*/
 	}
 		
 /**

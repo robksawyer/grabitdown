@@ -39,48 +39,50 @@ class UploadsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			
-			$this->request->data['User']['role'] = 'user'; //Set the default role
-			$userData['User'] = $this->request->data['User'];
-			$user = $this->Upload->User->register($userData);
-			if (!empty($user)) {
-				//Create a folder based on the user's name
-				$userFolder = $this->request->data['User']['custom_path'];
-				unset($this->request->data['User']);
+			//Check to see if the user has selected a file
+			$this->Upload->set($this->request->data);
+			if ($this->Upload->validates()) {
+				$this->request->data['User']['role'] = 'user'; //Set the default role
+				$userData['User'] = $this->request->data['User'];
+				$user = $this->Upload->User->register($userData);
+				if (!empty($user)) {
+					//Create a folder based on the user's name
+					$userFolder = $this->request->data['User']['custom_path'];
+					unset($this->request->data['User']);
 				
-				//http://milesj.me/code/cakephp/uploader
-				$this->Uploader = new Uploader(array(
-									'tempDir' => TMP,
-									'baseDir'	=> WWW_ROOT,
-									'uploadDir'	=> 'files/uploads/'.$userFolder.'/',
-									'maxNameLength' => 200
-									));
+					//http://milesj.me/code/cakephp/uploader
+					$this->Uploader = new Uploader(array(
+										'tempDir' => TMP,
+										'baseDir'	=> WWW_ROOT,
+										'uploadDir'	=> 'files/uploads/'.$userFolder.'/',
+										'maxNameLength' => 200
+										));
 									
+					if ($data = $this->Uploader->upload('fileName')) {
+						// Upload successful, do whatever
+						//debug($data);
 				
-				if ($data = $this->Uploader->upload('fileName')) {
-					// Upload successful, do whatever
-					//debug($data);
-					
-					//Add pertinent data to the array
-					$this->request->data['Upload'] = $data;
-					$this->request->data['Upload']['test_token'] = $this->Upload->generateToken($this->request->data['Upload']['name']);
-					$this->request->data['Upload']['test_token_active'] = 1;
-					$this->request->data['Upload']['active'] = 0; //Disable until the user pays
-					$this->request->data['Upload']['user_id'] = $this->Upload->User->getLastInsertID();
-					$this->request->data['Upload']['caption'] = $this->request->data['Upload']['custom_name'];
-					unset($this->request->data['Upload']['custom_name']);
-					
-					$this->Upload->create();
-					if ($this->Upload->save($this->request->data)) {
-						//Set the upload id
-						$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
-						$this->Session->setFlash(__('Congratulations! Your almost done – just pay and you\'re done.'));
-						$this->redirect(array('action' => 'payment',
-											'uid'=>$this->request->data['Upload']['id'],
-											'uuid'=>$this->Upload->User->getLastInsertID()
-											));
-					} else {
-						$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
+						//Add pertinent data to the array
+						$this->request->data['Upload'] = $data;
+						$this->request->data['Upload']['test_token'] = $this->Upload->generateToken($this->request->data['Upload']['name']);
+						$this->request->data['Upload']['test_token_active'] = 1;
+						$this->request->data['Upload']['active'] = 0; //Disable until the user pays
+						$this->request->data['Upload']['user_id'] = $this->Upload->User->getLastInsertID();
+						$this->request->data['Upload']['caption'] = $this->request->data['Upload']['custom_name'];
+						unset($this->request->data['Upload']['custom_name']);
+				
+						$this->Upload->create();
+						if ($this->Upload->save($this->request->data)) {
+							//Set the upload id
+							$this->request->data['Upload']['id'] = $this->Upload->getLastInsertID();
+							$this->Session->setFlash(__('Congratulations! Your almost done – just pay and you\'re done.'));
+							$this->redirect(array('action' => 'payment',
+												'uid'=>$this->request->data['Upload']['id'],
+												'uuid'=>$this->Upload->User->getLastInsertID()
+												));
+						} else {
+							$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
+						}
 					}
 				}
 			}
@@ -260,7 +262,11 @@ class UploadsController extends AppController {
 			$paypal = new Paypal();
 			$codePrice = $this->Upload->Code->getPrice($this->request->data['Upload']['total_codes']);
 			$itemName = $this->Upload->Code->getItemName($this->request->data['Upload']['total_codes']);
-			$nvpStr = $paypal->buildNVPString($codePrice,$itemName,$this->request->data['Upload']['total_codes']);
+			$nvpStr = $paypal->buildNVPString($codePrice, $itemName,
+											$this->request->data['Upload']['user_id'],
+											$this->request->data['Upload']['id'],
+											$this->request->data['Upload']['total_codes']
+											);
 			if($paypal->setExpressCheckout($nvpStr)) {
 				$result = $paypal->getPaypalUrl($paypal->token);
 			}else {
@@ -273,8 +279,7 @@ class UploadsController extends AppController {
 			if(false !== $result) {
 				//The result should look like the following
 				//https://www.sandbox.paypal.com/incontext?token=EC-09N44269CG053064W
-				$params = "&uuid=".$this->request->data['Upload']['user_id']."&uid=".$this->request->data['Upload']['id'];
-				$this->redirect($result.$params);
+				$this->redirect($result);
 			}else {
 				$this->Session->setFlash(__('Error while connecting to PayPal, Please try again', true));
 			}
@@ -304,15 +309,14 @@ class UploadsController extends AppController {
 		 	If the buyer approves payment,you can optionally call GetExpressCheckoutDetails 
 			to obtain buyer details to display to your webpage.
 		*/
-		debug($this->request);
 		
 		//do paypal setECCheckout
 		App::import('Model','Paypal');
 		$paypal = new Paypal();
 		//Build the NVP string
-		$totalCodes = $this->request->named['total_codes'];
-		$codePrice = $this->Upload->Code->getPrice($totalCodes);
-		$itemName = $this->Upload->Code->getItemName($totalCodes);
+		$total_codes = $this->request->params['named']['filter']['total_codes'];
+		$codePrice = $this->Upload->Code->getPrice($total_codes);
+		$itemName = $this->Upload->Code->getItemName($total_codes);
 		$nvpCheckoutStr = $paypal->buildNVPCheckoutString($token,$payerId,$codePrice,$itemName);
 		if($paypal->doExpressCheckoutPayment($nvpCheckoutStr)) {
 			$result = true;
@@ -324,19 +328,27 @@ class UploadsController extends AppController {
 		if ($result === false) {
 			$this->Session->setFlash(__('Error while making payment, Please try again', true),'message_fail');
 		} else {
-			$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
+			$user_id = $this->request->params['named']['filter']['uuid'];
+			$upload_id = $this->request->params['named']['filter']['uid'];
 			
 			//Generate file codes
-			$this->request->data['Code'] = $this->Upload->Code->generateCodes($this->request->named['uid'],$this->request->named['total_codes']);
-			
-			//Add the total codes to the uploaded file for easy calculation
-			$this->Upload->read(null, $this->request->named['uid']);
-			$this->Upload->set(array(
-									'total_codes' => $this->request->named['total_codes'],
-									'active' => 1
-									)
-								);
-			$this->Upload->save();
+			$codeCreationResult = $this->Upload->Code->generateCodes($upload_id,$total_codes);
+			if($codeCreationResult === true){
+				//Codes generated successfully
+				$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
+				
+				//Add the total codes to the uploaded file for easy calculation
+				$this->Upload->read(null, $upload_id);
+				$this->Upload->set(array(
+										'total_codes' => $total_codes,
+										'active' => 1
+										)
+									);
+				$this->Upload->save();
+			}else{
+				//Code generation failed
+				$this->Session->setFlash(__('Your purchase has completed, but there was an issue with the code generation.', true),'message_fail');
+			}
 		}
 		
 		$this->render('paypal_back');

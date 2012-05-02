@@ -24,7 +24,26 @@ class Upload extends AppModel {
 			'label' => 'name',
 			'method' => 'multibyteSlug'
 		),
-		'Uploader.FileValidation'
+		'Uploader.FileValidation' => array(
+			'fileName' => array(
+						'required'	=> array(
+										'value' => true,
+										'error' => 'You must select a file first'
+						),
+						'extension'	=> array(
+								'value' => array(
+									'aif','aifc','aiff','au','kar','mid','midi','mp2','mp3',
+									'mpga','ra','ram','rm','rpm','snd','tsi','wav',
+									'wma','gz','gtar','z','tgz','zip','rar','rev','tar','7z'
+								),
+								'error' => 'You cannot upload this type of file.'
+						),
+						'filesize' => array(
+										'value' => 5242880,
+										'error' => 'This file is too large or small.'
+						)
+					)
+		)
 	);
 	
 /**
@@ -39,6 +58,22 @@ class Upload extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		)
+	);
+	
+/**
+ * Validation parameters
+ *
+ * @var array
+ */
+	public $validate = array(
+		'fileName' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'required' => true, 
+				'allowEmpty' => false,
+				'message' => 'Please select a file'
+			)
 		)
 	);
 

@@ -149,10 +149,16 @@ class Paypal extends AppModel {
 	* @param int totalCodes 
 	* Example: 'RETURNURL=http://grabitdown/uploads/paypal_return/100&CANCELURL=http://grabitdown/uploads/paypal_cancel&PAYMENTREQUEST_0_CURRENCYCODE=USD&PAYMENTREQUEST_0_AMT=25&PAYMENTREQUEST_0_ITEMAMT=25&PAYMENTREQUEST_0_PAYMENTACTION=Sale&L_PAYMENTREQUEST_0_ITEMCATEGORY0=Digital&L_PAYMENTREQUEST_0_NAME0=100 download codes&L_PAYMENTREQUEST_0_AMT0=25&L_PAYMENTREQUEST_0_QTY0=1&NOSHIPPING=1'
 	 */
-	public function buildNVPString($codePrice = 0, $itemName = '', $upload_id=null, $user_id='', $totalCodes = 0){
+	public function buildNVPString($codePrice = 0, $itemName = '', $user_id='', $upload_id=null, $totalCodes = 0){
 		//build nvp string
 		//use your own logic to get and set each variable
-		$returnURL = Router::url(array('controller'=>'uploads','action'=>'paypal_return','uuid'=>$user_id,'uid'=>$upload_id,'total_codes'=>$totalCodes),true);
+		$returnURL = Router::url(array('controller'=>'uploads',
+										'action'=>'paypal_return',
+										'filter' => array(
+											'uuid'=>$user_id,
+											'uid'=>$upload_id,
+											'total_codes'=>$totalCodes
+										)),true);
 		$cancelURL = Router::url(array('controller'=>'uploads','action'=>'paypal_cancel'),true);
 		
 		$currencyCode = 'USD';

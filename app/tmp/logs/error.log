@@ -860,3 +860,81 @@
 2012-05-01 23:42:39 Error: [MissingControllerException] Controller class UploadController could not be found.
 #0 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2012-05-02 00:13:28 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a13%3a27Z
+    [CORRELATIONID] => ebf3239a79434
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-02 00:26:15 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a26%3a15Z
+    [CORRELATIONID] => bd7f14e02b9e
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-02 00:30:48 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a30%3a48Z
+    [CORRELATIONID] => 3cde150cb5f32
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-02 00:36:11 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a36%3a11Z
+    [CORRELATIONID] => d63e8bc8f3199
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-02 00:37:21 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a37%3a20Z
+    [CORRELATIONID] => 6467ccca7f673
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
+2012-05-02 00:38:18 Error: Array
+(
+    [TIMESTAMP] => 2012%2d05%2d02T00%3a38%3a17Z
+    [CORRELATIONID] => 37ef022588f4e
+    [ACK] => Failure
+    [VERSION] => 72%2e0
+    [BUILD] => 2840849
+    [L_ERRORCODE0] => 10525
+    [L_SHORTMESSAGE0] => Invalid%20Data
+    [L_LONGMESSAGE0] => This%20transaction%20cannot%20be%20processed%2e%20The%20amount%20to%20be%20charged%20is%20zero%2e
+    [L_SEVERITYCODE0] => Error
+)
+
