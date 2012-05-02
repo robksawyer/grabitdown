@@ -64,14 +64,13 @@ class Code extends AppModel {
 /**
  * Generate token used by the user registration system
  *
- * @param int $length Token Length
- * @return string
+ * @param int $length Token length
+ * @return string the random token
  */
-	public function generateToken($length = 10) {
+	public function generateToken($length = 5) {
 		$possible = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$token = "";
 		$i = 0;
-
 		while ($i < $length) {
 			$char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
 			if (!stristr($token, $char)) {

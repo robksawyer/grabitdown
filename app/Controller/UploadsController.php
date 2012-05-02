@@ -10,7 +10,7 @@ class UploadsController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('add');
+		$this->Auth->allow('add','payment','paypal_set_ec','paypal_return','paypal_cancel');
 	}
 	
 /**
@@ -317,7 +317,12 @@ class UploadsController extends AppController {
 	*/
 	public function paypal_cancel($id=null) {
 		$this->layout = 'clean';
-		$this->render('paypal_back');
+		//Pass the user along to an action that will clear the account and the upload
+		debug($this->request);
+		debug($this->request->data['Upload']['user_id']);
+		//$this->redirect(array('controller'=>'users','action' => 'clear_user_data',$this->request->data['Upload']['user_id']));
+		break;
+		//$this->render('paypal_back');
 	}
 
 	/**
