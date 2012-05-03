@@ -1,4 +1,3 @@
-
 <?php
 /**
  *
@@ -22,27 +21,22 @@
 		<div style="background:black;min-height:20px;width:100%;padding:0;margin:0 auto">&nbsp;</div>
 		<div style="width:440px;margin:0 auto">
 			<?php 
-				$activation_URL = Router::url(array('ajax'=>false,'admin'=>false,'controller'=>'users','action'=>'verify','email',$token),true);
+				$user_name = $user['User']['fullname'];
+				$user_email = $user['User']['email'];
+				$admin_URL = Router::url(array('ajax'=>false,'controller'=>'users','action'=>'admin',$user['User']['password_token']),true);
 			?>
-			<h1 style="font-size:20px;margin:40px 0 20px 0;color:#000000;">Hello <?php echo $user_name; ?>,</h1>
+			<h1 style="font-size:20px;margin:40px 0 20px 0;color:#000000;">Thanks for signing up and choosing us <?php echo $this->Html->link($user_name,$admin_URL,array('style'=>'color:#ef3f23')); ?>!.</h1>
 			<div style="width:440px;margin:0 auto">
-				<h2>Congratulations! Your account has been setup.</h2>
-				<div>
-					But you're not finished yet.
-					<br>
-					To activate your account, you must visit the URL below within 24 hours.
-					<br>
-					<?php echo $this->Html->link($activation_URL,$activation_URL); ?>
-					<br>
-					
-					Sincerely,
-						Rob Sawyer
-				</div>
+				<h3>You can sign into your account using the following information.</h3>
+				<ul>
+					<li>username: <?php echo $user_email; ?></li>
+					<li><?php echo $this->Html->link($admin_URL,$admin_URL,array('style'=>'color:#ef3f23')); ?></li>
+				</ul>
 			</div>
 		</div>
 		<div style="width:100%;clear:both;"></div>
 		<div style="background:black;width:516px;margin:25px auto 25px;font-size:12px;text-align:center;overflow:auto;color:#ffffff;padding:15px 0px 15px 0px;">
-			Sent from <?php echo $this->Html->link("Trapped Tracks",'http://www.trappedtracks.com',array('target'=>'_blank','style'=>'color:#ffffff')); ?> | <?php echo $this->Html->link("Edit Email Notifications",Router::url(array('ajax'=>false,'controller'=>'settings','action'=>'notifications'),true),array('target'=>'_blank','style'=>'color:#ffffff')); ?>
+			Sent from <?php echo $this->Html->link("FIND | GET | MAKE",'http://www.find-get-make.com',array('target'=>'_blank','style'=>'color:#ffffff')); ?> | <?php echo $this->Html->link("Edit Email Notifications",Router::url(array('ajax'=>false,'controller'=>'settings','action'=>'notifications'),true),array('target'=>'_blank','style'=>'color:#ffffff')); ?>
 		</div>
 		<div style="width:516px;background:white;margin:15px auto;overflow:auto;font-family:'helvetica'">
         <div style="width:440px;margin:0 auto"></div>

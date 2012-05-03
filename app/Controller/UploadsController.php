@@ -87,7 +87,7 @@ class UploadsController extends AppController {
 												));
 						} else {
 							$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
-							$this->log('The file could not be uploaded.','upload_debug')
+							$this->log('The file could not be uploaded.','upload_debug');
 							Debugger::log($data);
 						}
 					}
@@ -426,19 +426,18 @@ class UploadsController extends AppController {
 	protected function _sendActivationEmail($admin = null, $options = array()) {
 		//Parse the options
 		$user = $options['user'];
-		
 		if (!empty($user)) {
 			$options = array(
-								'layout'=>'signup_activate',
-								'subject'=>'Verify and activate your account',
-								'view'=>'default'
-								);
-			$viewVars = array('token'=>$user['User']['email_token'],'user'=>$user);
+							'layout'=>'signup_activate',
+							'subject'=>'Verify and activate your account',
+							'view'=>'default'
+							);
+			$viewVars = array('token'=>$user['User']['email_token'],'user_name'=>$user['User']['fullname']);
 
 			//Send the email
 			$this->_sendEmail($user['User']['email'],$options,$viewVars);
 			
-			$this->set('token', $user['User']['email_token']);
+			//$this->set('token', $user['User']['email_token']);
 			if ($admin) {
 				$this->Session->setFlash(sprintf(
 					__('%s has been sent an email with instructions to activate their account.', true),

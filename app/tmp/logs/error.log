@@ -997,3 +997,29 @@
 #1 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
 #2 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #3 {main}
+2012-05-03 19:37:33 Error: [SocketException] Operation timed out
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/SmtpTransport.php(95): CakeSocket->connect()
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/SmtpTransport.php(60): SmtpTransport->_connect()
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/CakeEmail.php(972): SmtpTransport->send(Object(CakeEmail))
+#3 /Users/robsa/Sites/grabitdown/app/Controller/AppController.php(70): CakeEmail->send()
+#4 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(439): AppController->_sendEmail('robksawyer@gmai...', Array, Array)
+#5 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(392): UploadsController->_sendActivationEmail(NULL, Array)
+#6 [internal function]: UploadsController->paypal_return()
+#7 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UploadsController), Array)
+#8 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#9 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#10 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2012-05-03 19:50:03 Error: [SocketException] Operation timed out
+#0 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/SmtpTransport.php(95): CakeSocket->connect()
+#1 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/SmtpTransport.php(60): SmtpTransport->_connect()
+#2 /Users/robsa/Sites/grabitdown/lib/Cake/Network/Email/CakeEmail.php(972): SmtpTransport->send(Object(CakeEmail))
+#3 /Users/robsa/Sites/grabitdown/app/Controller/AppController.php(70): CakeEmail->send()
+#4 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(439): AppController->_sendEmail('robksawyer@gmai...', Array, Array)
+#5 /Users/robsa/Sites/grabitdown/app/Controller/UploadsController.php(393): UploadsController->_sendActivationEmail(NULL, Array)
+#6 [internal function]: UploadsController->paypal_return()
+#7 /Users/robsa/Sites/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UploadsController), Array)
+#8 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#9 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#10 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
