@@ -16,7 +16,7 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->authenticate = array('Form' => array('fields' => array('username' => 'email', 'password' => 'passwd')));
-		$this->Auth->allow('logout','clear_user_data','delete','reset','reset_password','verify');
+		$this->Auth->allow('logout','clear_user_data','delete','reset','reset_password','verify','test_email');
 		
 		/*if (!Configure::read('App.defaultEmail')) {
 			Configure::write('App.defaultEmail', 'noreply@' . env('HTTP_HOST'));
@@ -197,8 +197,8 @@ class UsersController extends AppController {
 	 * @return void
 	 */
 	public function verify($type = 'email') {
-		if (isset($this->request->params['1'])){
-			$token = $this->request->params['1'];
+		if (isset($this->request->params['pass']['1'])){
+			$token = $this->request->params['pass']['1'];
 		} else {
 			$this->redirect(array('action' => 'login'), null, true);
 		}
@@ -227,16 +227,15 @@ class UsersController extends AppController {
 
 			if ($this->User->save($data, false)) {
 				if ($type === 'reset') {
-					$this->Email->to = $email;
-					$this->Email->from = Configure::read('App.defaultEmail');
-					$this->Email->replyTo = Configure::read('App.defaultEmail');
-					$this->Email->return = Configure::read('App.defaultEmail');
-					$this->Email->subject = env('HTTP_HOST') . ' ' . __d('users', 'Password Reset', true);
-					$this->Email->template = null;
-					$content[] = __d('users', 'Your password has been reset', true);
-					$content[] = __d('users', 'Please login using this password and change your password', true);
-					$content[] = $newPassword;
-					$this->Email->send($content);
+					
+					$options = array(
+										'layout'=>'signup_activate',
+										'subject'=>__d('users', 'Password Reset', true),
+										'view'=>'default'
+										);
+					$viewVars = array('data'=>$data,'newPassword'=>$newPassword);
+					$this->_sendVerificationEmail($email,$options,$viewVars);
+					
 					$this->Session->setFlash(__d('users', 'Your password was sent to your registered email account', true));
 					$this->redirect(array('action' => 'login'));
 				} else {
@@ -284,7 +283,7 @@ class UsersController extends AppController {
 	public function reset_password($token = null, $user = null) {
 		if (empty($token)) {
 			$admin = false;
-			if ($user) {
+			if($user) {
 				$this->request->data = $user;
 				$admin = true;
 			}
@@ -380,31 +379,47 @@ class UsersController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 	
+	public function test_email(){
+		$options = array(
+							'layout'=>'signup_activate',
+							'subject'=>'Awesome it worked',
+							'view'=>'default'
+							);
+		$user = array();
+		$user['User'] = array();
+		$user['User']['fullname'] = "Rob Sawyer";
+		$user['User']['email_token'] = "ASF23asfasfK";
+		$viewVars = array('user'=>$user);
+		$this->_sendVerificationEmail("robksawyer@gmail.com",$options,$viewVars);
+	}
+	
 	/**
 	* Sends the verification email
 	*
 	* This method is protected and not private so that classes that inherit this
-	* controller can override this method to change the varification mail sending
+	* controller can override this method to change the verification mail sending
 	* in any possible way.
 	*
 	* @param string $to Receiver email address
 	* @param array $options EmailComponent options
+	* @param array $viewVars view variables to pass along
 	* @return boolean Success
 	*/
-	protected function _sendVerificationEmail($to = null, $options = array()) {
-		$defaults = array(
-			'from' => 'noreply@' . env('HTTP_HOST'),
-			'subject' => __d('users', 'Account verification', true),
-			'template' => 'account_verification');
-
-		$options = array_merge($defaults, $options);
-
-		$this->Email->to = $to;
-		$this->Email->from = $options['from'];
-		$this->Email->subject = $options['subject'];
-		$this->Email->template = $options['template'];
-
-		return $this->Email->send();
+	protected function _sendVerificationEmail($to = null,$options = array(),$viewVars=array()) {
+		if(!empty($to)){
+			if(empty($options['view'])){
+				$options['view'] = 'default';
+			}
+			$email = new CakeEmail('standard'); //Use the standard config template
+			$email->template($options['view'], $options['layout'])
+						->emailFormat('html')
+						->to($to)
+						->subject($options['subject'])
+						->viewVars($viewVars)
+						->send();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -423,12 +438,12 @@ class UsersController extends AppController {
 
 		$options = array_merge($defaults, $options);
 
-		if (!empty($this->data)) {
-			$user = $this->User->passwordReset($this->data);
+		if (!empty($this->request->data)) {
+			$user = $this->User->passwordReset($this->request->data);
 
 			if (!empty($user)) {
-				$this->set('token', $user[$this->modelClass]['password_token']);
-				$this->Email->to = $user[$this->modelClass]['email'];
+				$this->set('token', $user['User']['password_token']);
+				$this->Email->to = $user['User']['email'];
 				$this->Email->from = $options['from'];
 				$this->Email->subject = $options['subject'];
 				$this->Email->template = $options['template'];
@@ -437,7 +452,7 @@ class UsersController extends AppController {
 				if ($admin) {
 					$this->Session->setFlash(sprintf(
 						__d('users', '%s has been sent an email with instruction to reset their password.', true),
-						$user[$this->modelClass]['email']));
+						$user['User']['email']));
 					$this->redirect(array('action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash(__d('users', 'You should receive an email with further instructions shortly', true));
@@ -461,7 +476,7 @@ class UsersController extends AppController {
 	* @link http://api13.cakephp.org/class/cookie-component
 	*/
 	/*protected function _setCookie($options = array(), $cookieKey = 'User') {
-		if (empty($this->data[$this->modelClass]['remember_me'])) {
+		if (empty($this->request->data['User']['remember_me'])) {
 			$this->Cookie->delete($cookieKey);
 		} else {
 			$validProperties = array('domain', 'key', 'name', 'path', 'secure', 'time');
@@ -476,11 +491,11 @@ class UsersController extends AppController {
 			}
 
 			$cookieData = array();
-			$cookieData[$this->Auth->fields['username']] = $this->data[$this->modelClass][$this->Auth->fields['email']];
-			$cookieData[$this->Auth->fields['password']] = $this->data[$this->modelClass][$this->Auth->fields['password']];
+			$cookieData[$this->Auth->fields['username']] = $this->request->data['User'][$this->Auth->fields['email']];
+			$cookieData[$this->Auth->fields['password']] = $this->request->data['User'][$this->Auth->fields['password']];
 			$this->Cookie->write($cookieKey, $cookieData, true, '1 Month');
 		}
-		unset($this->data[$this->modelClass]['remember_me']);
+		unset($this->request->data['User']['remember_me']);
 	}*/
 
 	/**
@@ -491,13 +506,13 @@ class UsersController extends AppController {
 	*/
 	private function __resetPassword($token) {
 		$user = $this->User->checkPasswordToken($token);
-		if (empty($user)) {
+		if(empty($user)) {
 			$this->Session->setFlash(__d('users', 'Invalid password reset token, try again.', true));
 			$this->redirect(array('action' => 'reset_password'));
 		}
 
-		if (!empty($this->data)) {
-			if ($this->User->resetPassword(Set::merge($user, $this->data))) {
+		if (!empty($this->request->data)) {
+			if ($this->User->resetPassword(Set::merge($user, $this->request->data))) {
 				$this->Session->setFlash(__d('users', 'Password changed, you can now login with your new password.', true));
 				$this->redirect($this->Auth->loginAction);
 			}

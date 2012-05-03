@@ -980,3 +980,15 @@
 #1 /Users/robsa/Sites/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
 #2 /Users/robsa/Sites/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #3 {main}
+2012-05-03 04:53:08 Error: [MissingViewException] View file "/Users/robksawyer/Sites/com/grabitdown/app/View/Themed/V1/Users/test_email.ctp" is missing.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/View/View.php(460): View->_getViewFileName(NULL)
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-03 06:16:31 Error: [MissingActionException] Action UsersController::request_password_change() could not be found.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}

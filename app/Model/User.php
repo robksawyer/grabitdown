@@ -99,8 +99,7 @@ class User extends AppModel {
 	 * 
 	 */
 	public function beforeSave() {
-		
-		//Figure out what this does.
+		//Was called by changePassword()
 		/*$this->validatePasswordChange = array(
 			'new_password' => $this->validate['passwd'],
 			'confirm_password' => array(
@@ -181,12 +180,12 @@ class User extends AppModel {
 			if (!$now) {
 				$now = time();
 			}
-
 			$this->recursive = -1;
 			$data = false;
-			$match = $this->find(array(
-				$this->alias . '.email_token' => $token),
-				'id, email, email_token_expires, role');
+			$match = $this->find('first',array(
+														'conditions' => array($this->alias.'.email_token' => $token),
+														'fields' => array('id', 'email', 'email_token_expires', 'role')
+													));
 
 			if (!empty($match)){
 				$expires = strtotime($match[$this->alias]['email_token_expires']);
@@ -310,21 +309,34 @@ class User extends AppModel {
 	 */
 		public function changePassword($postData = array()) {
 			$this->set($postData);
-			//$tmp = $this->validate;
-			$this->validate = $this->validatePasswordChange;
-
+			$tmp = $this->validate;
+			//$this->validate = $this->validatePasswordChange;
+			$this->validate = array(
+				'new_password' => $this->validate['passwd'],
+				'confirm_password' => array('required' => array(
+																			'rule' => array('compareFields', 'new_password', 'confirm_password'), 
+																			'required' => true, 
+																			'message' => __d('users', 'The passwords are not equal.', true)
+																		)
+												),
+				'old_password' => array('to_short' => array(
+																		'rule' => 'validateOldPassword', 
+																		'required' => true, 
+																		'message' => __d('users', 'Invalid password.', true)
+																	)
+												)
+										);
+					
 			if ($this->validates()) {
 				//App::uses('Core', 'Security');
 				//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
 				$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
-				$this->save($postData, array(
-					'validate' => false,
-					'callbacks' => false));
-				//$this->validate = $tmp;
+				$this->save($postData, array('validate' => false,'callbacks' => false));
+				$this->validate = $tmp;
 				return true;
 			}
 
-			//$this->validate = $tmp;
+			$this->validate = $tmp;
 			return false;
 		}
 

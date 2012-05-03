@@ -9,17 +9,14 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
-<h2><?php __d('users', 'Forgot your password?'); ?></h2>
-<p>
-	<?php __d('users', 'Please enter the email you used for registration and you\'ll get an email with further instructions.'); ?>
-</p>
-<?php
-	echo $this->Form->create($model, array(
-		'url' => array(
-			'admin' => false,
-			'action' => 'reset_password')));
-	echo $this->Form->input('email', array(
-		'label' => __d('users', 'Your Email', true)));
-	echo $this->Form->submit(__d('users', 'Submit', true));
-	echo $this->Form->end();
-?>
+<div class="users form">
+	<?php echo $this->Form->create('User', array('url' => array('admin' => false, 'action' => 'reset_password'))); ?>
+	<fieldset>
+		<legend><?php echo __('Forgot your password?'); ?></legend>
+		<p><?php __('Please enter the email you used for registration and you\'ll get an email with further instructions.'); ?></p>
+		<?php
+		echo $this->Form->input('email', array('label' => __d('users', 'Your Email', true)));
+		?>
+	</fieldset>
+	<?php echo $this->Form->end(__('Submit')); ?>
+</div>
