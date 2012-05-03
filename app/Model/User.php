@@ -78,13 +78,37 @@ class User extends AppModel {
 		'tos' => array(
 			'rule' => array('custom','[1]'),
 			'message' => 'You must agree to the terms of service.'
+		),
+		'passwd' => array(
+			'to_short' => array(
+				'rule' => array('minLength', '6'),
+				'message' => 'The password must have at least 6 characters.'
+			),
+			'required' => array(
+				'rule' => 'notEmpty',
+				'message' => 'Please enter a password.'
+			)
+		),
+		'temppassword' => array(
+			'rule' => 'confirmPassword',
+			'message' => 'The passwords are not equal, please try again.'
 		)
 	);
-	
+
 	/**
 	 * 
 	 */
 	public function beforeSave() {
+		
+		//Figure out what this does.
+		/*$this->validatePasswordChange = array(
+			'new_password' => $this->validate['passwd'],
+			'confirm_password' => array(
+				'required' => array('rule' => array('compareFields', 'new_password', 'confirm_password'), 'required' => true, 'message' => __d('users', 'The passwords are not equal.', true))),
+			'old_password' => array(
+				'to_short' => array('rule' => 'validateOldPassword', 'required' => true, 'message' => __d('users', 'Invalid password.', true))));*/
+		
+		
 		if (isset($this->data[$this->alias]['passwd'])) {
 			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['passwd']);
 		}
@@ -173,6 +197,7 @@ class User extends AppModel {
 					$data[$this->alias]['role'] = $match[$this->alias]['role'];
 
 					if ($reset === true) {
+						//Generate a new password for the user
 						$data[$this->alias]['passwd'] = $this->generatePassword();
 						$data[$this->alias]['password_token'] = null;
 					}
@@ -260,7 +285,10 @@ class User extends AppModel {
 				'confirm_password' => array(
 					'required' => array(
 						'rule' => array('compareFields', 'new_password', 'confirm_password'), 
-						'message' => __('The passwords are not equal.', true))));
+						'message' => __('The passwords are not equal.', true)
+						)
+					)
+			);
 
 			$this->set($postData);
 			if ($this->validates()) {
