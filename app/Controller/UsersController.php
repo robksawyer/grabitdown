@@ -209,7 +209,7 @@ class UsersController extends AppController {
 			$data = $this->User->validateToken($token, true);
 		} else {
 			$this->Session->setFlash(__d('users', 'The url you accessed is no longer valid', true));
-			$this->redirect('/');
+			$this->redirect(array('action' => 'login'));
 		}
 
 		if ($data !== false) {
@@ -243,11 +243,15 @@ class UsersController extends AppController {
 					$data['User']['active'] = 1;
 					$this->User->save($data);
 					$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
-					$this->redirect(array('action' => 'login'));
+					//Log the user in with the auto generated password and then send them along to the create password page
+					$loginData = array('username'=>$data['User']['email'],'password'=>$data['User']['passwd']);
+					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password');
+					$this->Auth->login($loginData);
+					//$this->redirect(array('action' => 'create_password'));
 				}
 			} else {
 				$this->Session->setFlash(__d('users', 'There was an error trying to validate your e-mail address. Please check your e-mail for the URL you should use to verify your e-mail address.', true));
-				$this->redirect('/');
+				$this->redirect(array('action' => 'login'));
 			}
 		} else {
 			$this->Session->setFlash(__d('users', 'The url you accessed is no longer valid', true));
@@ -257,7 +261,6 @@ class UsersController extends AppController {
 	
 	/**
 	* Allows the user to enter a new password, it needs to be confirmed
-	*
 	* @return void
 	*/
 	public function change_password() {
@@ -266,6 +269,20 @@ class UsersController extends AppController {
 			if ($this->User->changePassword($this->request->data)) {
 				$this->Session->setFlash(__d('users', 'Password changed.', true));
 				$this->redirect('/');
+			}
+		}
+	}
+	
+	/**
+	* Allows the user to create a password. This happens after the user verifies their email address
+	* @return void
+	*/
+	public function create_password() {
+		if (!empty($this->request->data)) {
+			$this->request->data['User']['id'] = $this->Auth->user('id'); //Get the logged in user's id
+			if ($this->User->verifyNewPassword($this->request->data)) {
+				$this->Session->setFlash(__d('users', 'Password created.', true));
+				$this->redirect(array('controller'=>'uploads','action'=>'index'));
 			}
 		}
 	}

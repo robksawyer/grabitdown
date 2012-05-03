@@ -307,39 +307,72 @@ class User extends AppModel {
 	 * @param array $postData Post data from controller
 	 * @return boolean True on success
 	 */
-		public function changePassword($postData = array()) {
-			$this->set($postData);
-			$tmp = $this->validate;
-			//$this->validate = $this->validatePasswordChange;
-			$this->validate = array(
-				'new_password' => $this->validate['passwd'],
-				'confirm_password' => array('required' => array(
-																			'rule' => array('compareFields', 'new_password', 'confirm_password'), 
-																			'required' => true, 
-																			'message' => __d('users', 'The passwords are not equal.', true)
-																		)
-												),
-				'old_password' => array('to_short' => array(
-																		'rule' => 'validateOldPassword', 
+	public function changePassword($postData = array()) {
+		$this->set($postData);
+		$tmp = $this->validate;
+		//$this->validate = $this->validatePasswordChange;
+		$this->validate = array(
+			'new_password' => $this->validate['passwd'],
+			'confirm_password' => array('required' => array(
+																		'rule' => array('compareFields', 'new_password', 'confirm_password'), 
 																		'required' => true, 
-																		'message' => __d('users', 'Invalid password.', true)
+																		'message' => __d('users', 'The passwords are not equal.', true)
 																	)
-												)
-										);
-					
-			if ($this->validates()) {
-				//App::uses('Core', 'Security');
-				//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
-				$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
-				$this->save($postData, array('validate' => false,'callbacks' => false));
-				$this->validate = $tmp;
-				return true;
-			}
-
+											),
+			'old_password' => array('to_short' => array(
+																	'rule' => 'validateOldPassword', 
+																	'required' => true, 
+																	'message' => __d('users', 'Invalid password.', true)
+																)
+											)
+									);
+				
+		if ($this->validates()) {
+			//App::uses('Core', 'Security');
+			//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
+			$this->save($postData, array('validate' => false,'callbacks' => false));
 			$this->validate = $tmp;
-			return false;
+			return true;
 		}
 
+		$this->validate = $tmp;
+		return false;
+	}
+	
+	/**
+		* Creates the password for a user
+	 *
+	 * @param array $postData Post data from controller
+	 * @return boolean True on success
+	 */
+	public function verifyNewPassword($postData = array()) {
+		$this->set($postData);
+		$tmp = $this->validate;
+		//$this->validate = $this->validatePasswordChange;
+		$this->validate = array(
+			'new_password' => $this->validate['passwd'],
+			'confirm_password' => array('required' => array(
+															'rule' => array('compareFields', 'new_password', 'confirm_password'), 
+																		'required' => true, 
+																		'message' => __d('users', 'The passwords are not equal.', true)
+																	)
+											)
+									);
+
+		if ($this->validates()) {
+			//App::uses('Core', 'Security');
+			//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
+			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
+			$this->save($postData, array('validate' => false,'callbacks' => false));
+			$this->validate = $tmp;
+			return true;
+		}
+
+		$this->validate = $tmp;
+		return false;
+	}
+	
 	/**
 	 * Validation method to check the old password
 	 *
@@ -425,7 +458,6 @@ class User extends AppModel {
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
-					$postData[$this->alias]['tmp_passwd'] = $postData[$this->alias]['passwd']; //This one will be unhashed
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				$this->create();
@@ -454,7 +486,6 @@ class User extends AppModel {
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}else{
 					$postData[$this->alias]['passwd'] = $this->generatePassword();
-					$postData[$this->alias]['tmp_passwd'] = $postData[$this->alias]['passwd']; //This one will be unhashed
 					//$postData[$this->alias]['passwd'] = Security::hash($postData[$this->alias]['passwd'], 'sha1', true);
 				}
 				
