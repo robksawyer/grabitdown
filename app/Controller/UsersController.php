@@ -411,6 +411,35 @@ class UsersController extends AppController {
 	}*/
 
 	/**
+	* Sends the verification email
+	*
+	* This method is protected and not private so that classes that inherit this
+	* controller can override this method to change the verification mail sending
+	* in any possible way.
+	*
+	* @param string $to Receiver email address
+	* @param array $options EmailComponent options
+	* @param array $viewVars view variables to pass along
+	* @return boolean Success
+	*/
+	protected function _sendEmail($to = null,$options = array(),$viewVars=array()) {
+		if(!empty($to)){
+			if(empty($options['view'])){
+				$options['view'] = 'default';
+			}
+			$email = new CakeEmail('standard'); //Use the standard config template
+			$email->template($options['view'], $options['layout'])
+						->emailFormat('html')
+						->to($to)
+						->subject($options['subject'])
+						->viewVars($viewVars)
+						->send();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	* Checks if the email is in the system and authenticated, if yes create the token
 	* save it and send the user an email
 	*

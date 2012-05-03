@@ -456,6 +456,45 @@ class UploadsController extends AppController {
 			$this->_sendErrorEmail($message);
 		}
 	}
+	
+	/**
+	* Sends the verification email
+	*
+	* This method is protected and not private so that classes that inherit this
+	* controller can override this method to change the verification mail sending
+	* in any possible way.
+	*
+	* @param string $to Receiver email address
+	* @param array $options EmailComponent options
+	* @param array $viewVars view variables to pass along
+	* @return boolean Success
+	*/
+	protected function _sendEmail($to = null,$options = array(),$viewVars=array()) {
+		if(!empty($to)){
+			if(empty($options['view'])){
+				$options['view'] = 'default';
+			}
+			
+			$email = new CakeEmail('standard'); //Use the standard config template
+			
+			try{
+				// success message
+				$email->template($options['view'], $options['layout'])
+							->emailFormat('html')
+							->to($to)
+							->subject($options['subject'])
+							->viewVars($viewVars)
+							->send();
+				return true;
+			}catch(Exception $e){
+				// failure message
+				$error_message = $e->getMessage();
+				debug($error_message);
+				$this->Session->setFlash(__('There was an error sending your email verification email. Please contact us.\n'.$error_message, true),'message_fail');
+			}
+		}
+		return false;
+	}
 
 }
 

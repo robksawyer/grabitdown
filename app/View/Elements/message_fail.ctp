@@ -1,3 +1,3 @@
 <div class="flash flash_failure">
-    <?php echo $message ?>
+    <?php echo $message; ?>
 </div>
