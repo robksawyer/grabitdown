@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+   RewriteEngine on
+   RewriteRule    ^$ app/webroot/    [L]
+   RewriteRule    (.*) app/webroot/$1 [L]
+</IfModule>
+#AddHandler php5-script .php
+AddHandler php5latest-script .php
