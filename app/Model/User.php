@@ -183,9 +183,9 @@ class User extends AppModel {
 			$this->recursive = -1;
 			$data = false;
 			$match = $this->find('first',array(
-														'conditions' => array($this->alias.'.email_token' => $token),
-														'fields' => array('id', 'email', 'email_token_expires', 'role')
-													));
+											'conditions' => array($this->alias.'.email_token' => $token),
+											'fields' => array('id', 'email', 'email_token_expires', 'role','passwd')
+										));
 
 			if (!empty($match)){
 				$expires = strtotime($match[$this->alias]['email_token_expires']);

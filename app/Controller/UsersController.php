@@ -214,7 +214,9 @@ class UsersController extends AppController {
 
 		if ($data !== false) {
 			$email = $data['User']['email'];
+			$passwd = $data['User']['passwd'];
 			unset($data['User']['email']);
+			unset($data['User']['passwd']);
 
 			if ($type === 'reset') {
 				$newPassword = $data['User']['passwd'];
@@ -244,7 +246,7 @@ class UsersController extends AppController {
 					$this->User->save($data);
 					$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
 					//Log the user in with the auto generated password and then send them along to the create password page
-					$loginData = array('username'=>$data['User']['email'],'password'=>$data['User']['passwd']);
+					$loginData = array('username'=>$email,'password'=>$passwd);
 					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password');
 					$this->Auth->login($loginData);
 					//$this->redirect(array('action' => 'create_password'));
