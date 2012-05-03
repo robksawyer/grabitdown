@@ -281,15 +281,15 @@ class UsersController extends AppController {
 	* @return void
 	*/
 	public function reset_password($token = null, $user = null) {
-		if (empty($token)) {
+		if(empty($token)) {
 			$admin = false;
 			if($user) {
 				$this->request->data = $user;
 				$admin = true;
 			}
-			$this->_sendPasswordReset($admin);
+			$this->_sendPasswordReset($admin); //Show the forgot password form
 		} else {
-			$this->__resetPassword($token);
+			$this->__resetPassword($token); //Show the reset password form
 		}
 	}
 	
@@ -430,25 +430,23 @@ class UsersController extends AppController {
 	* @param array $options Options
 	* @return void
 	*/
-	protected function _sendPasswordReset($admin = null, $options = array()) {
-		$defaults = array(
-			'from' => 'noreply@' . env('HTTP_HOST'),
-			'subject' => __d('users', 'Password Reset', true),
-			'template' => 'password_reset_request');
-
-		$options = array_merge($defaults, $options);
-
+	protected function _sendPasswordReset($admin = null, $options = array()) {			
 		if (!empty($this->request->data)) {
+			
 			$user = $this->User->passwordReset($this->request->data);
 
 			if (!empty($user)) {
+				$options = array(
+									'layout'=>'password_reset_request',
+									'subject'=>'Password Reset',
+									'view'=>'default'
+									);
+				$viewVars = array('token'=>$user['User']['password_token'],'user'=>$user);
+	
+				//Send the email
+				$this->_sendVerificationEmail($user['User']['email'],$options,$viewVars);
+				
 				$this->set('token', $user['User']['password_token']);
-				$this->Email->to = $user['User']['email'];
-				$this->Email->from = $options['from'];
-				$this->Email->subject = $options['subject'];
-				$this->Email->template = $options['template'];
-
-				$this->Email->send();
 				if ($admin) {
 					$this->Session->setFlash(sprintf(
 						__d('users', '%s has been sent an email with instruction to reset their password.', true),

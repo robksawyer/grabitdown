@@ -17,7 +17,7 @@
 		echo $this->Form->create('User');
 		echo $this->Form->input('email', array('label' => __d('users', 'Email', true)));
 		echo $this->Form->input('passwd', array('label' => __d('users', 'Password', true),
-															'after'=>'<div>Forgot your password? Reset it '.$this->Html->link('here',array('admin'=>false,'controller'=>'users','action'=>'request_password_change')
+															'after'=>'<div>Forgot your password? Reset it '.$this->Html->link('here',array('admin'=>false,'controller'=>'users','action'=>'reset_password')
 															).'.</div>'
 														)
 													);

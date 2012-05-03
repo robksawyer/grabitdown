@@ -23,20 +23,13 @@
 		<div style="width:440px;margin:0 auto">
 			<?php 
 				$user_name = $data['User']['fullname'];
-				$login_URL = Router::url(array('ajax'=>false,'controller'=>'users','action'=>'login'),true);
+				$reset_URL = Router::url(array('ajax'=>false,'admin'=>false,,'controller'=>'users','action'=>'reset_password',$token),true);
 			?>
-			<h1 style="font-size:20px;margin:40px 0 20px 0;color:#000000;">Hello <?php echo $user_name; ?>,</h1>
 			<div style="width:440px;margin:0 auto">
-				<h2><span style="color:red;">Notice:</span> Your password has been reset.</h2>
 				<div>
-					But you're not finished yet.
+					A request to reset your password was sent. To change your password click the link below.
 					<br>
-					You should now login using the password below and change it to something that you can remember.
-					<br>
-					<?php 
-					echo "Temporary password: <strong>".$newPassword."</strong><br>";
-					echo "You can login at ".$this->Html->link($login_URL,$login_URL);
-					?>
+					<?php $this->Html->link($reset_URL,$reset_URL,array('target'=>'_blank')); ?>
 				</div>
 			</div>
 		</div>
