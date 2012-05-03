@@ -23,7 +23,7 @@
 		<div style="width:440px;margin:0 auto">
 			<?php 
 				$user_name = $user['User']['fullname'];
-				$activation_URL = Router::url(array('ajax'=>false,'controller'=>'users','action'=>'verify','email',$user['User']['email_token']),true);
+				$activation_URL = Router::url(array('ajax'=>false,'admin'=>false,'controller'=>'users','action'=>'verify','email',$token),true);
 			?>
 			<h1 style="font-size:20px;margin:40px 0 20px 0;color:#000000;">Hello <?php echo $user_name; ?>,</h1>
 			<div style="width:440px;margin:0 auto">

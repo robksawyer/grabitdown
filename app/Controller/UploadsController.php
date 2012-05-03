@@ -87,6 +87,8 @@ class UploadsController extends AppController {
 												));
 						} else {
 							$this->Session->setFlash(__('Bummer :( Your file could NOT be uploaded.'));
+							$this->log('The file could not be uploaded.','upload_debug')
+							Debugger::log($data);
 						}
 					}
 				}
@@ -349,12 +351,23 @@ class UploadsController extends AppController {
 		if($paypal->doExpressCheckoutPayment($nvpCheckoutStr)) {
 			$result = true;
 		}else {
-			$this->log($paypal->errors);
+			$this->log($paypal->errors,'paypal_debug');
 			$result = false;
 		}
 		
 		if ($result === false) {
 			$this->Session->setFlash(__('Error while making payment, Please try again', true),'message_fail');
+			
+			// Send an email to the administor to see if he can resolve
+			$message = 'There was an error generating the codes for the user\'s upload.';
+			$message .= '\n The user\'s name is: '. $user['User']['fullname'];
+			$message .= '\n The user\'s email is: '. $user['User']['email'];
+			$message .= '\n Upload ID: '. $upload_id;
+			$message .= '\n Total codes to generate: '. $total_codes;
+			$subject = 'Payment error';
+			
+			$this->_sendErrorEmail($message,$subject);
+			
 		} else {
 			$user_id = $this->request->params['named']['filter']['uuid'];
 			$upload_id = $this->request->params['named']['filter']['uid'];
@@ -362,13 +375,10 @@ class UploadsController extends AppController {
 			//Generate file codes
 			$codeCreationResult = $this->Upload->Code->generateCodes($upload_id,$total_codes);
 			if($codeCreationResult === true){
-				//Codes generated successfully
-				$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
-				
 				//Activate the user account
 				$this->Upload->User->activate($user_id);
 				
-				//Add the total codes to the uploaded file for easy calculation
+				//Add the total codes to the uploaded file for easy calculation and make the upload active
 				$this->Upload->read(null, $upload_id);
 				$this->Upload->set(array(
 										'total_codes' => $total_codes,
@@ -376,17 +386,77 @@ class UploadsController extends AppController {
 										)
 									);
 				$this->Upload->save();
+				
+				//Send the user their activation email
+				$user = $this->Upload->User->read(null,$user_id);
+				$this->_sendActivationEmail(null,array('user'=>$user));
+				
+				//Codes generated successfully
+				//$this->Session->setFlash(__('Thank you for purchasing.', true),'message_success');
 			}else{
 				//Code generation failed
-				$this->Session->setFlash(__('Your purchase has completed, but there was an issue with the code generation.', true),'message_fail');
+				$this->Session->setFlash(__('Your purchase has completed, but there was an issue with the code generation. The administrator has been notified via email.', true),'message_fail');
+				
+				// Send an email to the administor to see if he can resolve
+				$message = 'There was an error generating the codes for the user\'s upload.';
+				$message .= '\n The user\'s name is: '. $user['User']['fullname'];
+				$message .= '\n The user\'s email is: '. $user['User']['email'];
+				$message .= '\n Upload ID: '. $upload_id;
+				$message .= '\n Total codes to generate: '. $total_codes;
+				$subject = 'Code Generation Error';
+				$this->_sendErrorEmail($message,$subject);
 			}
 		}
-		
+		//This window will close and redirect the user to the login page. To change the redirect, update this in the Views -> Uploads -> paypal_back.ctp file.
 		$this->render('paypal_back');
 	}
 	
 	/**
 	 * END PAYPAL PAYMENT RELATED
 	 */
+	
+	/**
+	* Checks if the email is in the system and authenticated, if yes create the token
+	* save it and send the user an email
+	*
+	* @param boolean $admin Admin boolean
+	* @param array $options Options
+	* @return void
+	*/
+	protected function _sendActivationEmail($admin = null, $options = array()) {
+		//Parse the options
+		$user = $options['user'];
+		
+		if (!empty($user)) {
+			$options = array(
+								'layout'=>'signup_activate',
+								'subject'=>'Verify and activate your account',
+								'view'=>'default'
+								);
+			$viewVars = array('token'=>$user['User']['email_token'],'user'=>$user);
+
+			//Send the email
+			$this->_sendEmail($user['User']['email'],$options,$viewVars);
+			
+			$this->set('token', $user['User']['email_token']);
+			if ($admin) {
+				$this->Session->setFlash(sprintf(
+					__('%s has been sent an email with instructions to activate their account.', true),
+					$user['User']['email']),'message_success');
+				//$this->redirect(array('action' => 'index', 'admin' => true));
+			} else {
+				$this->Session->setFlash(__('Thanks for your purchase! You should receive an email shortly with the instructions needed to activate your account.', true),'message_success');
+				//$this->redirect(array('action' => 'login'));
+			}
+		} else {
+			// Send an email to the administor to see if he can resolve based on the PayPal email address used.
+			$message = 'The user\'s activation email didn\'t send because the email wasn\'t valid';
+			$message .= '\n The user\'s name is: '. $user['User']['fullname'];
+			$message .= '\n The user\'s email is: '. $user['User']['email'];
+			
+			$this->_sendErrorEmail($message);
+		}
+	}
+
 }
 

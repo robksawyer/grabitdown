@@ -44,4 +44,63 @@ class AppController extends Controller {
 		$this->Auth->allow('index', 'view');
 	}
 	
+	/**
+	* Sends the verification email
+	*
+	* This method is protected and not private so that classes that inherit this
+	* controller can override this method to change the verification mail sending
+	* in any possible way.
+	*
+	* @param string $to Receiver email address
+	* @param array $options EmailComponent options
+	* @param array $viewVars view variables to pass along
+	* @return boolean Success
+	*/
+	protected function _sendEmail($to = null,$options = array(),$viewVars=array()) {
+		if(!empty($to)){
+			if(empty($options['view'])){
+				$options['view'] = 'default';
+			}
+			$email = new CakeEmail('standard'); //Use the standard config template
+			$email->template($options['view'], $options['layout'])
+						->emailFormat('html')
+						->to($to)
+						->subject($options['subject'])
+						->viewVars($viewVars)
+						->send();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	* Checks if the email is in the system and authenticated, if yes create the token
+	* save it and send the user an email
+	*
+	* @param array $message The error message
+	* @param array $subject The message subject line
+	* @param array $layout You can customize the layout if needed
+	* @return void
+	*/
+	protected function _sendErrorEmail($message = '',$subject = 'There was an error in the app',$layout='default') {
+		if (!empty($this->request->data)) {
+			//The administrator email address
+			$admin = 'robksawyer@gmail.com';
+			if (!empty($admin)) {
+				$options = array(
+									'layout'=>$layout,
+									'subject'=>$subject,
+									'view'=>'default'
+									);
+				$viewVars = array('content'=>$message);
+	
+				//Send the admin an email
+				$this->_sendEmail($admin,$options,$viewVars);
+				$this->log('Error email sent to '.$admin,'error_email_log');
+			} else {
+				// The email didn't send because the email wasn't valid
+			}
+		}
+	}
+	
 }

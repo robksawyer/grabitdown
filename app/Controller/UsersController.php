@@ -234,7 +234,7 @@ class UsersController extends AppController {
 										'view'=>'default'
 										);
 					$viewVars = array('data'=>$data,'newPassword'=>$newPassword);
-					$this->_sendVerificationEmail($email,$options,$viewVars);
+					$this->_sendEmail($email,$options,$viewVars);
 					
 					$this->Session->setFlash(__d('users', 'Your password was sent to your registered email account', true));
 					$this->redirect(array('action' => 'login'));
@@ -379,7 +379,7 @@ class UsersController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 	
-	public function test_email(){
+	/*public function test_email(){
 		$options = array(
 							'layout'=>'signup_activate',
 							'subject'=>'Awesome it worked',
@@ -390,37 +390,8 @@ class UsersController extends AppController {
 		$user['User']['fullname'] = "Rob Sawyer";
 		$user['User']['email_token'] = "ASF23asfasfK";
 		$viewVars = array('user'=>$user);
-		$this->_sendVerificationEmail("robksawyer@gmail.com",$options,$viewVars);
-	}
-	
-	/**
-	* Sends the verification email
-	*
-	* This method is protected and not private so that classes that inherit this
-	* controller can override this method to change the verification mail sending
-	* in any possible way.
-	*
-	* @param string $to Receiver email address
-	* @param array $options EmailComponent options
-	* @param array $viewVars view variables to pass along
-	* @return boolean Success
-	*/
-	protected function _sendVerificationEmail($to = null,$options = array(),$viewVars=array()) {
-		if(!empty($to)){
-			if(empty($options['view'])){
-				$options['view'] = 'default';
-			}
-			$email = new CakeEmail('standard'); //Use the standard config template
-			$email->template($options['view'], $options['layout'])
-						->emailFormat('html')
-						->to($to)
-						->subject($options['subject'])
-						->viewVars($viewVars)
-						->send();
-			return true;
-		}
-		return false;
-	}
+		$this->_sendEmail("robksawyer@gmail.com",$options,$viewVars);
+	}*/
 
 	/**
 	* Checks if the email is in the system and authenticated, if yes create the token
@@ -444,7 +415,7 @@ class UsersController extends AppController {
 				$viewVars = array('token'=>$user['User']['password_token'],'user'=>$user);
 	
 				//Send the email
-				$this->_sendVerificationEmail($user['User']['email'],$options,$viewVars);
+				$this->_sendEmail($user['User']['email'],$options,$viewVars);
 				
 				$this->set('token', $user['User']['password_token']);
 				if ($admin) {
@@ -453,7 +424,7 @@ class UsersController extends AppController {
 						$user['User']['email']));
 					$this->redirect(array('action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash(__d('users', 'You should receive an email with further instructions shortly', true));
+					$this->Session->setFlash(__d('users', 'You should receive an email with further instructions shortly.', true));
 					$this->redirect(array('action' => 'login'));
 				}
 			} else {
