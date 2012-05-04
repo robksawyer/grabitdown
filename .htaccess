@@ -4,4 +4,4 @@
    RewriteRule    (.*) app/webroot/$1 [L]
 </IfModule>
 #AddHandler php5-script .php
-AddHandler php5latest-script .php
+#AddHandler php5latest-script .php
