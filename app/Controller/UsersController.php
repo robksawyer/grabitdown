@@ -153,13 +153,28 @@ class UsersController extends AppController {
 		}
 		//Delete the container directory (custom_path)
 		$userFolderPath = $this->Uploader->baseDir.$this->Uploader->uploadDir.$user['User']['custom_path'];
+		$userFolderPath = trim($userFolderPath);
 		if(!empty($userFolderPath)){
-			if (is_dir($userFolderPath)) {
-				try{
-					rmdir($userFolderPath);
-				}catch(ErrorException $e){
-					//There was an issue deleting the directory
+			try{
+				if (is_dir($userFolderPath)) {
+					try{
+						//If files exist in the folder still, delete them.
+						$files = glob("$userFolderPath/*.*");
+						foreach($files as $file) {
+							if(is_dir($file) && !is_link($file)) {
+								rmdir($file);
+							} else {
+								unlink($file);
+							}
+						}
+						//Remove the contain directory
+						rmdir($userFolderPath);
+					}catch(ErrorException $e){
+						//There was an issue deleting the directory
+					}
 				}
+			}catch(ErrorException $e){
+				//There was an issue deleting the directory
 			}
 		}
 		return true;
@@ -252,8 +267,12 @@ class UsersController extends AppController {
 					//Log the user in with the auto generated password and then send them along to the create password page
 					$loginData = array('username'=>$email,'password'=>$passwd);
 					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password');
-					$this->Auth->login($loginData);
-					$this->redirect(array('action' => 'create_password'));
+					if($this->Auth->login($loginData)){
+						//The login was a success
+					}else{
+						$this->Session->setFlash(__d('users', "There was an error logging you in. Try logging in with your email address and the password $passwd", true));
+						$this->redirect(array('action' => 'login'));
+					}
 				}
 			} else {
 				$this->Session->setFlash(__d('users', 'There was an error trying to validate your e-mail address. Please check your e-mail for the URL you should use to verify your e-mail address.', true));
@@ -285,6 +304,7 @@ class UsersController extends AppController {
 	*/
 	public function create_password() {
 		if (!empty($this->request->data)) {
+			debug($this->Auth->user('id'));
 			$this->request->data['User']['id'] = $this->Auth->user('id'); //Get the logged in user's id
 			if ($this->User->verifyNewPassword($this->request->data)) {
 				$this->Session->setFlash(__d('users', 'Password created.', true));

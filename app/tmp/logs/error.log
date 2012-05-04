@@ -1135,3 +1135,24 @@
 #1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
 #2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #3 {main}
+2012-05-04 05:41:21 Error: [MethodNotAllowedException] Method Not Allowed
+#0 [internal function]: UsersController->delete('4fa36b6d-ec84-4...')
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-04 05:45:50 Error: [MethodNotAllowedException] Method Not Allowed
+#0 [internal function]: UsersController->delete('4fa36b03-56dc-4...')
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-04 05:49:46 Error: [MethodNotAllowedException] Method Not Allowed
+#0 [internal function]: UsersController->delete('4fa3646d-dad0-4...')
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(485): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
