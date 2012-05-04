@@ -1,5 +1,5 @@
 <div class="uploads form">
-	<h1><?php echo __("How many download codes would you like to buy?",true); ?></h1>
+	<h2><?php echo __("How many download codes would you like to buy?",true); ?></h2>
 <?php 
 	echo $this->Form->create('Upload',array('url'=>array('action'=>'paypal_set_ec')));
 ?>

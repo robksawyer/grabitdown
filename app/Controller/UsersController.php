@@ -15,7 +15,6 @@ class UsersController extends AppController {
 	 **/
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->authenticate = array('Form' => array('fields' => array('username' => 'email', 'password' => 'passwd')));
 		$this->Auth->allow('logout','clear_user_data','delete','reset','reset_password','verify','test_email','create_password');
 		
 		/*if (!Configure::read('App.defaultEmail')) {
@@ -30,6 +29,10 @@ class UsersController extends AppController {
 	 * @author Rob Sawyer
 	 **/
 	public function login() {
+		//Automatically redirect the user if they've already logged in
+		if($this->Auth->user()){
+			$this->redirect($this->Auth->redirect());
+		}
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$this->redirect($this->Auth->redirect());
@@ -153,13 +156,28 @@ class UsersController extends AppController {
 		}
 		//Delete the container directory (custom_path)
 		$userFolderPath = $this->Uploader->baseDir.$this->Uploader->uploadDir.$user['User']['custom_path'];
+		$userFolderPath = trim($userFolderPath);
 		if(!empty($userFolderPath)){
-			if (is_dir($userFolderPath)) {
-				try{
-					rmdir($userFolderPath);
-				}catch(ErrorException $e){
-					//There was an issue deleting the directory
+			try{
+				if (is_dir($userFolderPath)) {
+					try{
+						//If files exist in the folder still, delete them.
+						$files = glob("$userFolderPath/*.*");
+						foreach($files as $file) {
+							if(is_dir($file) && !is_link($file)) {
+								//rmdir($file);
+							} else {
+								unlink($file);
+							}
+						}
+						//Remove the contain directory
+						rmdir($userFolderPath);
+					}catch(ErrorException $e){
+						//There was an issue deleting the directory
+					}
 				}
+			}catch(ErrorException $e){
+				//There was an issue deleting the directory
 			}
 		}
 		return true;
@@ -219,12 +237,10 @@ class UsersController extends AppController {
 		if ($data !== false) {
 			$email = $data['User']['email'];
 			$passwd = $data['User']['passwd'];
-			unset($data['User']['email']);
-			unset($data['User']['passwd']);
 
 			if ($type === 'reset') {
 				$newPassword = $data['User']['passwd'];
-				$data['User']['passwd'] = $this->Auth->password($newPassword);
+				$data['User']['passwd'] = AuthComponent::password($newPassword); //Hash the new password
 			}
 
 			if ($type === 'email') {
@@ -245,15 +261,20 @@ class UsersController extends AppController {
 					$this->Session->setFlash(__d('users', 'Your password was sent to your registered email account', true));
 					$this->redirect(array('action' => 'login'));
 				} else {
-					unset($data);
-					$data['User']['active'] = 1;
-					$this->User->save($data);
-					$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
+					//unset($data);
+					//$data['User']['active'] = 1;
+					$this->User->save($data); //Save the data
 					//Log the user in with the auto generated password and then send them along to the create password page
-					$loginData = array('username'=>$email,'password'=>$passwd);
-					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password');
-					$this->Auth->login($loginData);
-					$this->redirect(array('action' => 'create_password'));
+					$loginData['User'] = array('email'=>$email,'passwd'=>$passwd);
+					if($this->Auth->login($loginData)){
+						//The login was a success
+						$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
+						$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password','email'=>urlencode($email));
+						return $this->redirect($this->Auth->loginRedirect);
+					}else{
+						$this->Session->setFlash(__d('users', "There was an error logging you in. Try logging in with your email address and the password $passwd", true));
+						$this->redirect(array('action' => 'login'));
+					}
 				}
 			} else {
 				$this->Session->setFlash(__d('users', 'There was an error trying to validate your e-mail address. Please check your e-mail for the URL you should use to verify your e-mail address.', true));
@@ -284,8 +305,29 @@ class UsersController extends AppController {
 	* @return void
 	*/
 	public function create_password() {
+		if(!empty($this->request->params['named']['email'])){
+			$email = $this->request->params['named']['email'];
+		}
+		
+		$authUserData = $this->Auth->user();
+		if(empty($authUserData)){
+			$this->Session->setFlash(__d('users', 'There was an error logging you in and setting up a password. Your temporary password has been sent to your email address.', true));
+			//Send the temporary password to the user's email address
+			$options = array(
+								'layout'=>'temporary_password',
+								'subject'=>'Your Temporary Password',
+								'view'=>'default'
+								);
+			$viewVars = array('temp_password'=>$authUserData['User']['email'],'user'=>$user);
+
+			//Send the email
+			$this->_sendEmail($email,$options,$viewVars);
+			$this->redirect(array('controller'=>'users','action'=>'login'));
+		}
+		
+		$user = $this->User->find('first',array('conditions'=>array('email'=>$authUserData['User']['email'])));
 		if (!empty($this->request->data)) {
-			$this->request->data['User']['id'] = $this->Auth->user('id'); //Get the logged in user's id
+			$this->request->data['User']['id'] = $user['User']['id']; //Get the logged in user's id
 			if ($this->User->verifyNewPassword($this->request->data)) {
 				$this->Session->setFlash(__d('users', 'Password created.', true));
 				$this->redirect(array('controller'=>'uploads','action'=>'index'));

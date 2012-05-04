@@ -10,6 +10,7 @@
  */
 ?>
 <div class="users form">
+	<?php echo $this->Session->flash('auth'); ?>
 	<?php echo $this->Form->create('User', array('action' => 'create_password')); ?>
 	<fieldset>
 		<legend><?php echo __('Create a password'); ?></legend>

@@ -2,14 +2,14 @@
 	echo $this->Html->script('https://www.paypalobjects.com/js/external/dg.js',false);
 ?>
 <div class="uploads back">
-		<div style="margin-top:5px; font-face: Arial sans-serif; font-size: 12px;">You will be redirected to the new page in <span id="redirect_count">5</span> seconds</div>
+		<div style="margin-top:5px; font-face: Arial sans-serif; font-size: 12px;">You will be redirected to the new page in <span id="redirect_count">5</span> seconds.<br><br>If you don't want to wait, click <a href="javascript:doRedirect();">here</a>.</div>
 </div>
 <script language="Javascript">
 <!-- 
 	//parent.opener.location.reload(); //Reload original page
 	
 	//change the second to start counting down from 
-	var countdownfrom = 10; //in seconds
+	var countdownfrom = 8; //in seconds
 	var currentsecond = document.getElementById("redirect_count").innerHTML = countdownfrom+1;
 	function countdownRedirect(){ 
 		if (currentsecond != 1){ 

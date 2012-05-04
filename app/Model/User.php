@@ -202,9 +202,12 @@ class User extends AppModel {
 					}else{
 						$data[$this->alias]['passwd'] = $match[$this->alias]['passwd']; //So that I can log the user in afterwards
 					}
-
-					$data[$this->alias]['email_token'] = null;
-					$data[$this->alias]['email_token_expires'] = null;
+					
+					$testing = true;
+					if(!$testing){
+						$data[$this->alias]['email_token'] = null;
+						$data[$this->alias]['email_token_expires'] = null;
+					}
 				}
 			}
 			return $data;
@@ -349,7 +352,7 @@ class User extends AppModel {
 	 * @return boolean True on success
 	 */
 	public function verifyNewPassword($postData = array()) {
-		$this->set($postData);
+		$this->data = $postData;
 		$tmp = $this->validate;
 		//$this->validate = $this->validatePasswordChange;
 		$this->validate = array(
@@ -362,13 +365,13 @@ class User extends AppModel {
 											)
 									);
 		//Set the user id so that we can update the account
+		$this->id = $this->data[$this->alias]['id'];
 		if ($this->validates()) {
 			//App::uses('Core', 'Security');
 			//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
 			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
 			unset($this->data[$this->alias]['new_password']);
 			unset($this->data[$this->alias]['confirm_password']);
-			debug($this->data);
 			$this->save($this->data, array('validate' => false,'callbacks' => false));
 			$this->validate = $tmp;
 			return true;
