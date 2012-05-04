@@ -1,3 +1,22 @@
+#user-panel{
+	float: right;
+	width: 200px;
+	background: red;
+	padding: 10px 20px;
+	margin: -25px 0px 10px 0px;
+	text-align: right;
+	clear: none;
+}
+#user-panel a:link,
+#user-panel a:active,
+#user-panel a:visited{
+	color: #ffffff;
+	text-decoration: none;
+}
+#user-panel a:hover{
+	color: #ffff00;
+	text-decoration: underline;
+}
 ul.info{
 	list-style-type: none;
 	padding: 0;

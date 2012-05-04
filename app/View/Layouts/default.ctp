@@ -42,6 +42,9 @@
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($siteName, '/'); ?></h1>
+			<div id="user-panel">
+			<?php echo "Welcome ".$auth['fullname']."! ". $this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout')); ?>
+			</div>
 		</div>
 		<div id="content">
 			<?php echo $this->Session->flash(); ?>

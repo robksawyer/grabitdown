@@ -51,6 +51,14 @@ class AppController extends Controller {
 	}
 	
 	/**
+	 * Fires before the page is rendered
+	 */
+	public function beforeRender(){
+		$auth = $this->Auth->user();
+		$this->set(compact('auth'));
+	}
+	
+	/**
 	* Checks if the email is in the system and authenticated, if yes create the token
 	* save it and send the user an email
 	*
