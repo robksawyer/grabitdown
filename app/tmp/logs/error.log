@@ -1192,3 +1192,18 @@
 #1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
 #2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #3 {main}
+2012-05-04 07:42:58 Error: [MissingActionException] Action UploadsController::admin() could not be found.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-05-04 07:43:16 Error: [MissingActionException] Action UploadsController::admin() could not be found.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-05-04 07:43:52 Error: [MissingActionException] Action UploadsController::admin() could not be found.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}

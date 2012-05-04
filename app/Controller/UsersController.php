@@ -266,11 +266,11 @@ class UsersController extends AppController {
 					$this->User->save($data); //Save the data
 					//Log the user in with the auto generated password and then send them along to the create password page
 					$loginData['User'] = array('email'=>$email,'passwd'=>$passwd);
-					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password','email'=>urlencode($email));
 					if($this->Auth->login($loginData)){
 						//The login was a success
 						$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
-						return $this->redirect($this->Auth->redirect());
+						$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password','email'=>urlencode($email));
+						return $this->redirect($this->Auth->loginRedirect);
 					}else{
 						$this->Session->setFlash(__d('users', "There was an error logging you in. Try logging in with your email address and the password $passwd", true));
 						$this->redirect(array('action' => 'login'));
@@ -304,17 +304,30 @@ class UsersController extends AppController {
 	* Allows the user to create a password. This happens after the user verifies their email address
 	* @return void
 	*/
-	public function create_password($email = '') {
-		debug($email);
-		$userID = $this->Auth->user('id');
-		if(empty($userID)){
+	public function create_password() {
+		if(!empty($this->request->params['named']['email'])){
+			$email = $this->request->params['named']['email'];
+		}
+		
+		$authUserData = $this->Auth->user();
+		if(empty($authUserData)){
 			$this->Session->setFlash(__d('users', 'There was an error logging you in and setting up a password. Your temporary password has been sent to your email address.', true));
+			//Send the temporary password to the user's email address
+			$options = array(
+								'layout'=>'temporary_password',
+								'subject'=>'Your Temporary Password',
+								'view'=>'default'
+								);
+			$viewVars = array('temp_password'=>$authUserData['User']['email'],'user'=>$user);
+
+			//Send the email
+			$this->_sendEmail($email,$options,$viewVars);
 			$this->redirect(array('controller'=>'users','action'=>'login'));
 		}
 		
+		$user = $this->User->find('first',array('conditions'=>array('email'=>$authUserData['User']['email'])));
 		if (!empty($this->request->data)) {
-			debug($this->Auth->user());
-			$this->request->data['User']['id'] = $this->Auth->user('id'); //Get the logged in user's id
+			$this->request->data['User']['id'] = $user['User']['id']; //Get the logged in user's id
 			if ($this->User->verifyNewPassword($this->request->data)) {
 				$this->Session->setFlash(__d('users', 'Password created.', true));
 				$this->redirect(array('controller'=>'uploads','action'=>'index'));

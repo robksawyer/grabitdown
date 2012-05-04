@@ -13,22 +13,32 @@ class UploadsController extends AppController {
 		$this->Auth->allow('add','payment','paypal_set_ec','paypal_return','paypal_cancel');
 	}
 	
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * admin area
+	 *
+	 * @return void
+	 */
+	public function admin() {
+		$this->Upload->recursive = 0;
+		//...
+	}
+	
+	/**
+	 * index method
+	 *
+	 * @return void
+	 */
 	public function index() {
 		$this->Upload->recursive = 0;
 		$this->set('uploads', $this->paginate());
 	}
 
-/**
- * view method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * view method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function view($id = null) {
 		$this->Upload->id = $id;
 		if (!$this->Upload->exists()) {
@@ -37,11 +47,11 @@ class UploadsController extends AppController {
 		$this->set('upload', $this->Upload->read(null, $id));
 	}
 	
-/**
- * add method
- *
- * @return void
- */
+	/**
+	 * add method
+	 *
+	 * @return void
+	 */
 	public function add() {
 		if ($this->request->is('post')) {
 			//Check to see if the user has selected a file
@@ -99,12 +109,12 @@ class UploadsController extends AppController {
 		$this->set(compact('users'));
 	}
 
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * edit method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function edit($id = null) {
 		$this->Upload->id = $id;
 		if (!$this->Upload->exists()) {
@@ -124,12 +134,12 @@ class UploadsController extends AppController {
 		$this->set(compact('users'));
 	}
 
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * delete method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
@@ -149,22 +159,23 @@ class UploadsController extends AppController {
 		$this->Session->setFlash(__('Upload was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-/**
- * admin_index method
- *
- * @return void
- */
+	
+	/**
+	 * admin_index method
+	 *
+	 * @return void
+	 */
 	public function admin_index() {
 		$this->Upload->recursive = 0;
 		$this->set('uploads', $this->paginate());
 	}
 
-/**
- * admin_view method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * admin_view method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function admin_view($id = null) {
 		$this->Upload->id = $id;
 		if (!$this->Upload->exists()) {
@@ -173,11 +184,11 @@ class UploadsController extends AppController {
 		$this->set('upload', $this->Upload->read(null, $id));
 	}
 
-/**
- * admin_add method
- *
- * @return void
- */
+	/**
+	 * admin_add method
+	 *
+	 * @return void
+	 */
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Upload->create();
@@ -192,12 +203,12 @@ class UploadsController extends AppController {
 		$this->set(compact('users'));
 	}
 
-/**
- * admin_edit method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * admin_edit method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function admin_edit($id = null) {
 		$this->Upload->id = $id;
 		if (!$this->Upload->exists()) {
@@ -217,12 +228,12 @@ class UploadsController extends AppController {
 		$this->set(compact('users'));
 	}
 
-/**
- * admin_delete method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * admin_delete method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
 	public function admin_delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
@@ -260,10 +271,10 @@ class UploadsController extends AppController {
 		}
 	}
 
-/**
- * Starts the transaction and gets the token. Afterwards it's passed off to the final transaction method.
- * @param 
- */
+	/**
+	 * Starts the transaction and gets the token. Afterwards it's passed off to the final transaction method.
+	 * @param 
+	 */
 	public function paypal_set_ec() {
 		if ($this->request->is('post')) {
 			//Abort if cancel button was pressed

@@ -202,9 +202,12 @@ class User extends AppModel {
 					}else{
 						$data[$this->alias]['passwd'] = $match[$this->alias]['passwd']; //So that I can log the user in afterwards
 					}
-
-					$data[$this->alias]['email_token'] = null;
-					$data[$this->alias]['email_token_expires'] = null;
+					
+					$testing = true;
+					if(!$testing){
+						$data[$this->alias]['email_token'] = null;
+						$data[$this->alias]['email_token_expires'] = null;
+					}
 				}
 			}
 			return $data;
