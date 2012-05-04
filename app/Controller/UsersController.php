@@ -16,7 +16,7 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->authenticate = array('Form' => array('fields' => array('username' => 'email', 'password' => 'passwd')));
-		$this->Auth->allow('logout','clear_user_data','delete','reset','reset_password','verify','test_email');
+		$this->Auth->allow('logout','clear_user_data','delete','reset','reset_password','verify','test_email','create_password');
 		
 		/*if (!Configure::read('App.defaultEmail')) {
 			Configure::write('App.defaultEmail', 'noreply@' . env('HTTP_HOST'));
@@ -155,7 +155,11 @@ class UsersController extends AppController {
 		$userFolderPath = $this->Uploader->baseDir.$this->Uploader->uploadDir.$user['User']['custom_path'];
 		if(!empty($userFolderPath)){
 			if (is_dir($userFolderPath)) {
-			    rmdir($userFolderPath);
+				try{
+					rmdir($userFolderPath);
+				}catch(ErrorException $e){
+					//There was an issue deleting the directory
+				}
 			}
 		}
 		return true;
@@ -249,7 +253,7 @@ class UsersController extends AppController {
 					$loginData = array('username'=>$email,'password'=>$passwd);
 					$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password');
 					$this->Auth->login($loginData);
-					//$this->redirect(array('action' => 'create_password'));
+					$this->redirect(array('action' => 'create_password'));
 				}
 			} else {
 				$this->Session->setFlash(__d('users', 'There was an error trying to validate your e-mail address. Please check your e-mail for the URL you should use to verify your e-mail address.', true));

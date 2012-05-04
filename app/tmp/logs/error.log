@@ -1116,3 +1116,22 @@
 #12 /nfs/c04/h02/mnt/64785/domains/bandspreader.robksawyer.com/html/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
 #13 /nfs/c04/h02/mnt/64785/domains/bandspreader.robksawyer.com/html/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #14 {main}
+2012-05-04 04:15:05 Error: [MissingViewException] View file "/Users/robksawyer/Sites/com/grabitdown/app/View/Themed/V1/Users/verify.ctp" is missing.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/View/View.php(460): View->_getViewFileName(NULL)
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-04 04:41:23 Error: [MissingViewException] View file "/Users/robksawyer/Sites/com/grabitdown/app/View/Themed/V1/Users/verify.ctp" is missing.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/View/View.php(460): View->_getViewFileName(NULL)
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Controller/Controller.php(959): View->render(NULL, NULL)
+#2 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(110): Controller->render()
+#3 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-05-04 05:07:14 Error: [MissingActionException] Action UploadsController::admin() could not be found.
+#0 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(103): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/robksawyer/Sites/com/grabitdown/lib/Cake/Routing/Dispatcher.php(85): Dispatcher->_invoke(Object(UploadsController), Object(CakeRequest), Object(CakeResponse))
+#2 /Users/robksawyer/Sites/com/grabitdown/app/webroot/index.php(92): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}

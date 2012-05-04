@@ -199,6 +199,8 @@ class User extends AppModel {
 						//Generate a new password for the user
 						$data[$this->alias]['passwd'] = $this->generatePassword();
 						$data[$this->alias]['password_token'] = null;
+					}else{
+						$data[$this->alias]['passwd'] = $match[$this->alias]['passwd']; //So that I can log the user in afterwards
 					}
 
 					$data[$this->alias]['email_token'] = null;
@@ -359,12 +361,15 @@ class User extends AppModel {
 																	)
 											)
 									);
-
+		//Set the user id so that we can update the account
 		if ($this->validates()) {
 			//App::uses('Core', 'Security');
 			//$this->data[$this->alias]['passwd'] = Security::hash($this->data[$this->alias]['new_password'], null, true);
 			$this->data[$this->alias]['passwd'] = AuthComponent::password($this->data[$this->alias]['new_password']);
-			$this->save($postData, array('validate' => false,'callbacks' => false));
+			unset($this->data[$this->alias]['new_password']);
+			unset($this->data[$this->alias]['confirm_password']);
+			debug($this->data);
+			$this->save($this->data, array('validate' => false,'callbacks' => false));
 			$this->validate = $tmp;
 			return true;
 		}
