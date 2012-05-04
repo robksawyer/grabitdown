@@ -1,6 +1,7 @@
-app/webroot/files/uploads/*
-app/tmp/*
-app/Config/*
+app/webroot/files/uploads/
+app/tmp/
+app/Config/database.php
+app/Config/database_local.php
 
 *_
 *.diff
