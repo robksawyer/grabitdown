@@ -1,5 +1,5 @@
 <div class="uploads back">
-		<div style="margin-top:5px; font-face: Arial sans-serif; font-size: 12px;">You will be redirected to the new page in <span id="redirect_count">5</span> seconds</div>
+		<div style="margin-top:5px; font-face: Arial sans-serif; font-size: 12px;">You will be redirected to the new page in <span id="redirect_count">5</span> seconds.<br><br>If you don't want to wait, click <a href="javascript:doRedirect();">here</a>.</div>
 </div>
 <script language="Javascript">
 <!-- 
