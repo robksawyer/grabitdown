@@ -46,6 +46,7 @@ class AppController extends Controller {
 											),'Session', 'Email', 'Cookie','RequestHandler');
 	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Text','Js' => array('Jquery'));
 	
+	
 	public function beforeFilter() {
 		$this->Auth->allow('index', 'view');
 	}
@@ -53,10 +54,7 @@ class AppController extends Controller {
 	/**
 	 * Fires before the page is rendered
 	 */
-	public function beforeRender(){
-		$auth = $this->Auth->user();
-		$this->set(compact('auth'));
-	}
+	public function beforeRender(){ }
 	
 	/**
 	* Checks if the email is in the system and authenticated, if yes create the token

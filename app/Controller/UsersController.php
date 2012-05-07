@@ -130,10 +130,16 @@ class UsersController extends AppController {
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
-		
+	
 		//Delete the user's data
 		$this->deleteUserData($id);
 		if ($this->User->delete()) {
+			//Log the user out if their account was just deleted.
+			$loggedInUserID = $this->Auth->user('id');
+			if($id == $loggedInUserID){
+				$this->Auth->logout();
+			}
+			
 			$this->Session->setFlash(__('User deleted'));
 			$this->redirect(array('action' => 'index'));
 		}

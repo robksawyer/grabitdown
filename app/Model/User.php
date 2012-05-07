@@ -137,7 +137,6 @@ class User extends AppModel {
 		)
 	);
 	
-	
 	/**
 	 * Custom validation method to ensure that the two entered passwords match
 	 *
@@ -167,6 +166,15 @@ class User extends AppModel {
 			}
 			return false;
 		}
+	
+	/**
+	 * Returns the logged in user's info
+	 * @return array
+	 */
+	public function getUserInfo(){
+		$authUser = $this->Auth->user();
+		$this->find('first',array('conditions'=>array('email'=>$authUser['User']['email'])));
+	}
 
 	/**
 	 * Validates the user token

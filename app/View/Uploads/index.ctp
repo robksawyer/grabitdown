@@ -1,5 +1,5 @@
 <div class="uploads index">
-	<h2><?php echo __('Uploads');?></h2>
+	<h2><?php echo __('Your Uploads');?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id');?></th>

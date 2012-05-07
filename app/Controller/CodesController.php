@@ -75,6 +75,24 @@ class CodesController extends AppController {
 		$uploads = $this->Code->Upload->find('list');
 		$this->set(compact('uploads'));
 	}
+	
+	/**
+	 * @param folder string The folder that the download should be in
+	 * @param token string The random download token
+	 * @return upload_id
+	 */
+	public function download($folder=null,$token=null){
+		//Save the user's ip address that downloads the file 
+		//$ip = sprintf('%u', ip2long($_SERVER['REMOTE_ADDR']));
+		//Find the upload_id and then path by searching the folder and code
+		//Find the code. If it exists check the folder
+		$codes = $this->Code->find('all',array('conditions'=>array('Code.token'=>$token)));
+		//More than one code found
+		if(count($codes) > 1){
+			//Find the upload by searching from the upload_id in the code
+			//Check the upload to see if the folder matches the passed folder
+		}
+	}
 
 /**
  * delete method

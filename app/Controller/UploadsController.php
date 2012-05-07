@@ -11,6 +11,13 @@ class UploadsController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('add','payment','paypal_set_ec','paypal_return','paypal_cancel');
+		$authUser = $this->Auth->user();
+		if(!empty($authUser['User'])){
+			$auth = $this->Upload->User->find('first',array(
+																			'conditions'=>array('User.email'=>$authUser['User']['email'])
+																			));
+			
+		}
 	}
 	
 	/**
@@ -29,7 +36,13 @@ class UploadsController extends AppController {
 	 * @return void
 	 */
 	public function index() {
+		//Only show the uploads for the logged in user
 		$this->Upload->recursive = 0;
+		$auth = $this->Auth->user();
+		$auth = $this->Upload->User->find('first',array('conditions'=>array('email'=>$auth['User']['email'])));
+		$this->paginate = array(
+									'conditions'=>array('Upload.user_id'=>$auth['User']['id'])
+									);
 		$this->set('uploads', $this->paginate());
 	}
 

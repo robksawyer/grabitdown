@@ -45,7 +45,7 @@ class Code extends AppModel {
 				//No codes exist
 				for($i=0;$i<$codeCount;$i++){
 					$postData[$i][$this->alias]['upload_id'] = $upload_id;
-					$postData[$i][$this->alias]['token'] = $this->generateToken(25);
+					$postData[$i][$this->alias]['token'] = $this->generateToken(6);
 					$postData[$i][$this->alias]['active'] = 1;
 				}
 				if($this->saveAll($postData)){

@@ -42,14 +42,17 @@
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($siteName, '/'); ?></h1>
+			<div id="user-panel">
 			<?php
 			//Check to see if the user is logged in
-			if(!empty($auth)):
+			$auth = $this->Session->read('Auth.User');
+			if(!empty($auth)):	
+				echo $this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
+			else:
+				echo $this->Html->link('Login',array('admin'=>false,'controller'=>'users','action'=>'login'));
+			endif; 
 			?>
-			<div id="user-panel">
-			<?php echo "Welcome ".$auth['fullname']."! ". $this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout')); ?>
 			</div>
-			<?php endif; ?>
 		</div>
 		<div id="content">
 			<?php echo $this->Session->flash(); ?>
