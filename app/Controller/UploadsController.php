@@ -39,11 +39,15 @@ class UploadsController extends AppController {
 		//Only show the uploads for the logged in user
 		$this->Upload->recursive = 0;
 		$auth = $this->Auth->user();
-		$auth = $this->Upload->User->find('first',array('conditions'=>array('email'=>$auth['User']['email'])));
+		if(empty($auth)){
+			$this->Session->setFlash(__('You must be logged in to view this page.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
 		$this->paginate = array(
-									'conditions'=>array('Upload.user_id'=>$auth['User']['id'])
+									'conditions'=>array('Upload.user_id'=>$auth['id'])
 									);
 		$this->set('uploads', $this->paginate());
+		$this->set(compact('auth'));
 	}
 
 	/**
@@ -57,7 +61,31 @@ class UploadsController extends AppController {
 		if (!$this->Upload->exists()) {
 			throw new NotFoundException(__('Invalid upload'));
 		}
-		$this->set('upload', $this->Upload->read(null, $id));
+		$upload = $this->Upload->read(null,$id);
+		$auth = $this->Auth->user();
+		if(empty($auth)){
+			$this->Session->setFlash(__('You must be logged in to view this page.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		//Check to see if the user should be able to view the file
+		if($auth['id'] != $upload['Upload']['user_id']){
+			$this->Session->setFlash(__('You must be logged in to view this page.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		
+		$this->paginate = array(
+			'Code'=>array(
+				//'conditions' => array('Code.active' => '1'),
+				'limit' => 10
+			)
+		);
+		$upload['Code'] = $this->paginate('Code'); //Paginate the code results
+		$active_codes = $this->Upload->Code->find('count',array('conditions'=>array(
+			'Code.upload_id'=>$id,
+			'Code.active'=>1,
+		)));
+		
+		$this->set(compact('upload','active_codes'));
 	}
 	
 	/**

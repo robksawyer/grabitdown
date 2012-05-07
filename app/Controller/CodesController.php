@@ -8,14 +8,29 @@ App::uses('AppController', 'Controller');
 class CodesController extends AppController {
 
 
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allow('download');
+	}
+	
 /**
  * index method
- *
+ * @param upload_id The upload id to show codes for
  * @return void
  */
-	public function index() {
+	public function index($upload_id=null) {
 		$this->Code->recursive = 0;
-		$this->set('codes', $this->paginate());
+		if(empty($upload_id)){
+			$this->Session->setFlash(__('The data provided was not valid.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		$this->paginate = array(
+						'conditions'=>array('Code.upload_id'=>$upload_id),
+						'limit'=>'100'
+					);
+		$codes = $this->paginate();
+		$upload = $this->Code->Upload->find('first',array('conditions'=>array('Upload.id'=>$upload_id)));
+		$this->set(compact('codes','upload'));
 	}
 
 /**
@@ -78,20 +93,33 @@ class CodesController extends AppController {
 	
 	/**
 	 * @param folder string The folder that the download should be in
+	 * @param upload_id int The upload's id
 	 * @param token string The random download token
 	 * @return upload_id
 	 */
-	public function download($folder=null,$token=null){
+	public function download($folder=null,$upload_id=null,$token=null){
 		//Save the user's ip address that downloads the file 
-		//$ip = sprintf('%u', ip2long($_SERVER['REMOTE_ADDR']));
+		$ip = $this->RequestHandler->getClientIp();
+		debug($ip);
 		//Find the upload_id and then path by searching the folder and code
 		//Find the code. If it exists check the folder
-		$codes = $this->Code->find('all',array('conditions'=>array('Code.token'=>$token)));
-		//More than one code found
-		if(count($codes) > 1){
-			//Find the upload by searching from the upload_id in the code
-			//Check the upload to see if the folder matches the passed folder
-		}
+		$code = $this->Code->find('all',array('conditions'=>array(
+				'Code.token'=>$token,
+				'Code.upload_id'=>$upload_id
+				)
+			));
+		debug($code);
+		
+		//The user is adding a comment
+		/*if ($this->request->is('post')) {
+			$this->Code->id = 
+			if ($this->Code->save($this->request->data)) {
+				$this->Session->setFlash(__('The code has been saved'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The code could not be saved. Please, try again.'));
+			}
+		}*/
 	}
 
 /**

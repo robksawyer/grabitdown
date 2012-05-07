@@ -44,7 +44,7 @@ class AppController extends Controller {
 																				)
 																			),
 											),'Session', 'Email', 'Cookie','RequestHandler');
-	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Text','Js' => array('Jquery'));
+	public $helpers = array('Html', 'Form', 'Session','Number', 'Time', 'Text','Js' => array('Jquery'));
 	
 	
 	public function beforeFilter() {

@@ -1,11 +1,17 @@
 <div class="uploads view">
-<h2><?php  echo __('Upload');?></h2>
+<h2><?php  echo __('Upload - '.$upload['Upload']['id']);?></h2>
+	<?php
+		$test_link = Router::url(array('controller'=>'uploads','action'=>'download',$upload['Upload']['test_token']),true);
+	?>
+	<div id="upload-overview">
+		<p class="test-url">You can test your download using <?php echo $this->Html->link($test_link,$test_link,array('target'=>'_blank')); ?></p>
+		<ul>
+			<li>Total Downloads: </li>
+			<li>Active Codes: <?php echo $this->Number->format($active_codes); ?></li>
+		</ul>
+	</div>
+	
 	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['id']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('Name'); ?></dt>
 		<dd>
 			<?php echo h($upload['Upload']['name']); ?>
@@ -91,7 +97,9 @@
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($upload['Code'] as $code): ?>
+		foreach ($upload['Code'] as $code): 
+			$code = $code['Code'];
+		?>
 		<tr>
 			<td><?php echo $code['id'];?></td>
 			<td><?php echo $code['upload_id'];?></td>
@@ -107,8 +115,16 @@
 		</tr>
 	<?php endforeach; ?>
 	</table>
+	<div class="paging">
+	<?php
+		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
+		echo $this->Paginator->numbers(array('separator' => ''));
+		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+		echo $this->Html->link('See all', array('controller'=>'codes','action'=>'index',$upload['Upload']['id']));
+	?>
+	</div>
 <?php endif; ?>
-
+	
 	<div class="actions">
 		<ul>
 			<li><?php echo $this->Html->link(__('New Code'), array('controller' => 'codes', 'action' => 'add'));?> </li>

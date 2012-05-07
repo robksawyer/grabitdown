@@ -2,42 +2,27 @@
 	<h2><?php echo __('Your Uploads');?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
 			<th><?php echo $this->Paginator->sort('name');?></th>
 			<th><?php echo $this->Paginator->sort('path');?></th>
-			<th><?php echo $this->Paginator->sort('path_alt');?></th>
-			<th><?php echo $this->Paginator->sort('caption');?></th>
-			<th><?php echo $this->Paginator->sort('slug');?></th>
 			<th><?php echo $this->Paginator->sort('user_id');?></th>
 			<th><?php echo $this->Paginator->sort('test_token');?></th>
-			<th><?php echo $this->Paginator->sort('test_token_count');?></th>
 			<th><?php echo $this->Paginator->sort('active');?></th>
-			<th><?php echo $this->Paginator->sort('modified');?></th>
 			<th><?php echo $this->Paginator->sort('created');?></th>
-			<th class="actions"><?php echo __('Actions');?></th>
 	</tr>
 	<?php
 	foreach ($uploads as $upload): ?>
 	<tr>
-		<td><?php echo h($upload['Upload']['id']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['name']); ?>&nbsp;</td>
+		<td><?php echo $this->Html->link($upload['Upload']['name'], array('action' => 'view', $upload['Upload']['id']),array('title'=>'Click for more details about the upload.')); ?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['path']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['path_alt']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['caption']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['slug']); ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
 		</td>
-		<td><?php echo h($upload['Upload']['test_token']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['test_token_count']); ?>&nbsp;</td>
+		<td><?php 
+			$test_link = Router::url(array('controller'=>'uploads','action'=>'download',$auth['custom_path'],'test',$upload['Upload']['test_token']));
+			echo $this->Html->link($upload['Upload']['test_token'],$test_link); 
+		?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['active']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['created']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $upload['Upload']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $upload['Upload']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $upload['Upload']['id']), null, __('Are you sure you want to delete # %s?', $upload['Upload']['id'])); ?>
-		</td>
+		<td><?php echo $this->Time->timeAgoInWords($upload['Upload']['created']); ?>&nbsp;</td>
 	</tr>
 <?php endforeach; ?>
 	</table>

@@ -31,12 +31,20 @@
 		echo $this->Html->css('cake.generic');
 		echo $this->Html->css('main.css');
 		
-		echo $this->Html->script('jquery-1.7.2.min'); // Include jQuery library
+		//echo $this->Html->script('jquery-1.7.2.min'); // Include jQuery library
+		
+		//Google libraries
+		echo $this->Html->script('https://www.google.com/jsapi');
 		
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<script type="text/javascript">
+	  google.load("search", "1");
+	  google.load("jquery", "1.4.2");
+	  google.load("jqueryui", "1.7.2");
+	</script>
 </head>
 <body>
 	<div id="container">

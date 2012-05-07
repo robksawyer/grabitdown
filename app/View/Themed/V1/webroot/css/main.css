@@ -43,3 +43,7 @@ ul.info li span.price{
 #cancel-pay{
 	margin-right: 20px;
 }
+.upload-name{
+	color: #000000;
+	font-style: italic;
+}
