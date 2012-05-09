@@ -18,7 +18,7 @@
 			<?php echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
 		</td>
 		<td><?php 
-			$test_link = Router::url(array('controller'=>'uploads','action'=>'download',$auth['custom_path'],'test',$upload['Upload']['test_token']));
+			$test_link = Router::url(array('controller'=>'uploads','action'=>'getit',$auth['custom_path'],'test',$upload['Upload']['test_token']));
 			echo $this->Html->link($upload['Upload']['test_token'],$test_link); 
 		?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['active']); ?>&nbsp;</td>

@@ -19,7 +19,7 @@
 		<!--<td>
 			<?php //echo $this->Html->link($code['Upload']['name'], array('controller' => 'uploads', 'action' => 'view', $code['Upload']['id'])); ?>
 		</td>-->
-		<td><?php echo $this->Html->link($code['Code']['token'],array('controller'=>'codes','action'=>'download',$upload['User']['custom_path'],$code['Upload']['id'],$code['Code']['token'])); ?>&nbsp;</td>
+		<td><?php echo $this->Html->link($code['Code']['token'],array('controller'=>'codes','action'=>'getit',$upload['User']['custom_path'],$code['Upload']['id'],$code['Code']['token'])); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['active']); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['last_download_time']); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['download_count']); ?>&nbsp;</td>

@@ -10,7 +10,7 @@ class CodesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('download');
+		$this->Auth->allow('getit');
 	}
 	
 /**
@@ -97,29 +97,100 @@ class CodesController extends AppController {
 	 * @param token string The random download token
 	 * @return upload_id
 	 */
-	public function download($folder=null,$upload_id=null,$token=null){
-		//Save the user's ip address that downloads the file 
-		$ip = $this->RequestHandler->getClientIp();
-		debug($ip);
+	public function getit($folder=null,$upload_id=null,$token=null){
 		//Find the upload_id and then path by searching the folder and code
 		//Find the code. If it exists check the folder
-		$code = $this->Code->find('all',array('conditions'=>array(
+		$code = $this->Code->find('first',array('conditions'=>array(
 				'Code.token'=>$token,
 				'Code.upload_id'=>$upload_id
 				)
 			));
-		debug($code);
-		
+		if(empty($code)){
+			$this->Session->setFlash(__('Invalid code'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		$this->Code->Upload->recursive = 0;
+		$upload = $this->Code->Upload->find('first',array('conditions'=>array('Upload.id'=>$upload_id)));
+		if(empty($upload)){
+			$this->Session->setFlash(__('There was an issue finding your download. Please contact us with your download code.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		$this->Code->id = $code['Code']['id'];
 		//The user is adding a comment
-		/*if ($this->request->is('post')) {
-			$this->Code->id = 
+		if ($this->request->is('post')) {
 			if ($this->Code->save($this->request->data)) {
-				$this->Session->setFlash(__('The code has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Your comment has been added. Thanks!'));
+				$this->request->data['Code']['comment'] = ''; //Clear the comment field
+				//$this->redirect(array('action' => 'index'));
 			} else {
+				$this->Session->setFlash(__('Your comment could not be added. Please, try again.'));
+			}
+		}else{
+			$online = false;
+			$ip = $this->RequestHandler->getClientIP(); //Get the user ip
+			//Request the location data
+			if($online){
+				//Don't do a GeoIP search if running locally
+				if($ip != '127.0.0.1'){
+					//http://ipinfodb.com/ (Currently using the lite version - lower accuracy)
+					$api_key = '7b3f09e733864e7658dbee31a1ba527f4ceaf1af2742e8996c43fcb76fccb7fe';
+					try {
+						$xml = Xml::toArray(Xml::build("http://api.ipinfodb.com/v3/ip-city?format=xml&key=$api_key&ip=$ip"));
+						/*	array(
+							'statusCode' => 'OK',
+							'statusMessage' => '',
+							'ipAddress' => '127.0.0.1',
+							'countryCode' => '-',
+							'countryName' => '-',
+							'regionName' => '-',
+							'cityName' => '-',
+							'zipCode' => '-',
+							'latitude' => '0',
+							'longitude' => '0',
+							'timeZone' => '-'
+						)*/
+					} catch (XmlException $e) {
+						throw new InternalErrorException();
+					}
+
+					//Set region specific information, if possible
+					if(!empty($xml['Response'])){
+						$this->Code->set(array(
+							'cityName' => $xml['Response']['cityName'],
+							'regionName' => $xml['Response']['regionName'],
+							'countryName' => $xml['Response']['countryName'],
+							'zipCode' => $xml['Response']['zipCode'],
+							'latitude' => $xml['Response']['latitude'],
+							'longitude' => $xml['Response']['longitude'],
+							'timeZone' => $xml['Response']['timeZone']
+						));
+					}
+				}
+			}
+			
+			//Set basic info
+			$currentTime = date('Y-m-d H:i:s');
+			$this->Code->set(array(
+				'ipAddress' => $ip,
+				'download_count' => intval($code['Code']['download_count']) + 1,
+				'last_download_time' => $currentTime
+			));
+			
+			//Download the file
+			//http://www.dereuromark.de/2011/11/21/serving-views-as-files-in-cake2/
+			//$file = Router::url($upload['Upload']['path'],true);
+			$file = $upload['Upload']['path'];
+			//If the upload name isn't concatenated on, the downloaded file name will be a collection of the URL params
+			$this->request->params['pass'][4] = $upload['Upload']['name'];
+			debug($this->request);
+			$this->response->download($file);
+			debug($this->response);
+			//Save the updated data to the code record
+			if(!$this->Code->save()){
+				//Record failed to update.
 				$this->Session->setFlash(__('The code could not be saved. Please, try again.'));
 			}
-		}*/
+		}
 	}
 
 /**

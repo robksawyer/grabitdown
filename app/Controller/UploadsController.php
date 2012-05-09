@@ -98,7 +98,7 @@ class UploadsController extends AppController {
 			//Check to see if the user has selected a file
 			$this->Upload->set($this->request->data);
 			if ($this->Upload->validates()) {
-				$this->request->data['User']['role'] = 'user'; //Set the default role
+				$this->request->data['User']['role'] = 4; //Set the default role to user (see bootstrap.php)
 				$userData['User'] = $this->request->data['User'];
 				$user = $this->Upload->User->register($userData);
 				if (!empty($user)) {

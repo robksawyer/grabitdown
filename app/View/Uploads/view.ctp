@@ -1,7 +1,7 @@
 <div class="uploads view">
 <h2><?php  echo __('Upload - '.$upload['Upload']['id']);?></h2>
 	<?php
-		$test_link = Router::url(array('controller'=>'uploads','action'=>'download',$upload['Upload']['test_token']),true);
+		$test_link = Router::url(array('controller'=>'uploads','action'=>'getit',$upload['Upload']['test_token']),true);
 	?>
 	<div id="upload-overview">
 		<p class="test-url">You can test your download using <?php echo $this->Html->link($test_link,$test_link,array('target'=>'_blank')); ?></p>

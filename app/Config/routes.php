@@ -42,3 +42,6 @@
  * the built-in default routes.
  */
 	require CAKE . 'Config' . DS . 'routes.php';
+	
+	//Tells cake that urls ending with “.xyz” will be served as files (either inline or as download attachment).
+	Router::parseExtensions();
