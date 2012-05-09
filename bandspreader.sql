@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 03, 2012 at 01:26 PM
+-- Generation Time: May 09, 2012 at 03:07 PM
 -- Server version: 5.1.44
 -- PHP Version: 5.3.2
 
@@ -33,7 +33,12 @@ CREATE TABLE `codes` (
   `modified` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=281 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `codes`
+--
+
 
 -- --------------------------------------------------------
 
@@ -62,7 +67,12 @@ CREATE TABLE `uploads` (
   `modified` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `uploads`
+--
+
 
 -- --------------------------------------------------------
 
@@ -93,3 +103,8 @@ CREATE TABLE `users` (
   UNIQUE KEY `email` (`email`),
   KEY `username` (`custom_path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
