@@ -20,13 +20,19 @@
 		<!--<td>
 			<?php //echo $this->Html->link($code['Upload']['name'], array('controller' => 'uploads', 'action' => 'view', $code['Upload']['id'])); ?>
 		</td>-->
-		<td><?php echo $this->Html->link($code['Code']['token'],array('controller'=>'codes','action'=>'getit',$upload['User']['custom_path'],$code['Upload']['id'],$code['Code']['token'])); ?>&nbsp;</td>
+		<td><?php echo $this->Html->link($code['Code']['token'],array('controller'=>'codes','action'=>'getit',$upload['User']['custom_path'],$upload['Upload']['id'],$code['Code']['token'])); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['active']); ?>&nbsp;</td>
-		<td><?php echo h($code['Code']['last_download_time']); ?>&nbsp;</td>
+		<td><?php 
+			if($code['Code']['last_download_time'] != '0000-00-00 00:00:00'){
+				echo $this->Time->format('F jS, Y',$code['Code']['last_download_time']); 
+			}else{
+				//Don't display the time
+			}
+		?>&nbsp;</td>
 		<td><?php echo h($code['Code']['download_count']); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['ipAddress']); ?>&nbsp;</td>
 		<td><?php 
-			$location = ucwords(strtolower($code['cityName'].', '.$code['regionName'].' '.$code['countryName']));
+			$location = ucwords(strtolower($code['Code']['cityName'].', '.$code['Code']['regionName'].' '.$code['Code']['countryName']));
 			echo $location;
 		?></td>
 		<!--<td><?php //echo h($code['Code']['comment']); ?>&nbsp;</td>-->

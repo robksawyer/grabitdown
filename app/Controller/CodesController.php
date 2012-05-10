@@ -26,11 +26,14 @@ class CodesController extends AppController {
 		}
 		$this->paginate = array(
 						'conditions'=>array('Code.upload_id'=>$upload_id),
-						'limit'=>'100',
+						'limit'=>'50',
 						'recursive'=>'-1'
 					);
 		$codes = $this->paginate();
-		$upload = $this->Code->Upload->find('first',array('conditions'=>array('Upload.id'=>$upload_id)));
+		$upload = $this->Code->Upload->find('first',array(
+																		'conditions'=>array('Upload.id'=>$upload_id),
+																		'recursive'=>'1'
+																		));
 		$this->set(compact('codes','upload'));
 	}
 

@@ -3,23 +3,23 @@
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('name');?></th>
-			<th><?php echo $this->Paginator->sort('path');?></th>
-			<th><?php echo $this->Paginator->sort('user_id');?></th>
+			<!--<th><?php //echo $this->Paginator->sort('path');?></th>-->
+			<!--<th><?php //echo $this->Paginator->sort('user_id');?></th>-->
 			<th><?php echo $this->Paginator->sort('test_token');?></th>
 			<th><?php echo $this->Paginator->sort('active');?></th>
-			<th><?php echo $this->Paginator->sort('created');?></th>
+			<th><?php echo $this->Paginator->sort('upload date');?></th>
 	</tr>
 	<?php
 	foreach ($uploads as $upload): ?>
 	<tr>
 		<td><?php echo $this->Html->link($upload['Upload']['name'], array('action' => 'view', $upload['Upload']['id']),array('title'=>'Click for more details about the upload.')); ?>&nbsp;</td>
-		<td><?php echo h($upload['Upload']['path']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
-		</td>
+		<!--<td><?php //echo h($upload['Upload']['path']); ?>&nbsp;</td>-->
+		<!--<td>
+			<?php //echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
+		</td>-->
 		<td><?php 
-			$test_link = Router::url(array('controller'=>'uploads','action'=>'getit',$current_user['custom_path'],'test',$upload['Upload']['test_token']));
-			echo $this->Html->link($upload['Upload']['test_token'],$test_link); 
+			$test_link = Router::url(array('controller'=>'codes','action'=>'getit',$upload['User']['custom_path'],$upload['Upload']['id'],$upload['Upload']['test_token']),true);
+			echo $this->Html->link($upload['Upload']['test_token'],$test_link,array('title'=>'Download the file')); 
 		?>&nbsp;</td>
 		<td><?php echo h($upload['Upload']['active']); ?>&nbsp;</td>
 		<td><?php echo $this->Time->timeAgoInWords($upload['Upload']['created']); ?>&nbsp;</td>
@@ -45,9 +45,5 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Upload'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Codes'), array('controller' => 'codes', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Code'), array('controller' => 'codes', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
