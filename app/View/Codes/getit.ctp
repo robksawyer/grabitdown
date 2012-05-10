@@ -1,13 +1,13 @@
 <div class="uploads form">
-<?php echo $this->Form->create('Code');?>
+<?php //echo $this->Form->create('Code');?>
 	<fieldset>
 		<legend><?php echo __('Your file should download shortly.'); ?></legend>
 	<?php
 		//echo $this->Form->input('user_location',array('type'=>'hidden'));
-		echo $this->Form->input('comment');
+		//echo $this->Form->input('comment');
 	?>
 	</fieldset>
-<?php echo $this->Form->submit(__('Add Comment'));?>
+<?php //echo $this->Form->submit(__('Add Comment'));?>
 </div>
 
 <script type="text/javascript">

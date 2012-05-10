@@ -115,6 +115,7 @@ class CodesController extends AppController {
 			$this->Session->setFlash(__('There was an issue finding your download. Please contact us with your download code.'));
 			$this->redirect(array('controller'=>'users','action' => 'login'));
 		}
+		//Set the code if to specify which code to save to.
 		$this->Code->id = $code['Code']['id'];
 		//The user is adding a comment
 		if ($this->request->is('post')) {
@@ -126,12 +127,19 @@ class CodesController extends AppController {
 				$this->Session->setFlash(__('Your comment could not be added. Please, try again.'));
 			}
 		}else{
-			$online = false;
+			$online = true;
 			$ip = $this->RequestHandler->getClientIP(); //Get the user ip
 			//Request the location data
 			if($online){
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "http://myip.dnsomatic.com/");
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$public_ip = curl_exec($ch);
+				curl_close($ch);
 				//Don't do a GeoIP search if running locally
-				if($ip != '127.0.0.1'){
+				if($public_ip != '127.0.0.1'){
+					$ip = $public_ip;
 					//http://ipinfodb.com/ (Currently using the lite version - lower accuracy)
 					$api_key = '7b3f09e733864e7658dbee31a1ba527f4ceaf1af2742e8996c43fcb76fccb7fe';
 					try {
@@ -176,23 +184,34 @@ class CodesController extends AppController {
 				'last_download_time' => $currentTime
 			));
 			
-			//Download the file
-			//http://www.dereuromark.de/2011/11/21/serving-views-as-files-in-cake2/
-			//$file = Router::url($upload['Upload']['path'],true);
-			$file = $upload['Upload']['path'];
-			//If the upload name isn't concatenated on, the downloaded file name will be a collection of the URL params
-			$this->request->params['pass'][4] = $upload['Upload']['name'];
-			debug($this->request);
-			$this->response->download($file);
-			debug($this->response);
 			//Save the updated data to the code record
 			if(!$this->Code->save()){
 				//Record failed to update.
 				$this->Session->setFlash(__('The code could not be saved. Please, try again.'));
 			}
+			
+			//Finally, download the file
+			$this->sendFile($upload);
 		}
 	}
-
+	
+	/**
+	 * Download the file
+	 */
+	protected function sendFile($upload = null) {
+		//Download the file
+		//http://www.dereuromark.de/2011/11/21/serving-views-as-files-in-cake2/
+		$file = $upload['Upload'];
+		$this->viewClass = 'Media';
+		$this->set(array(
+							//'id' => $file['name'],
+							'name' => trim(basename($file['name'],$file['ext']),'.'),
+							'download' => true,
+							'extension' => $file['ext'],
+							'path' => 'webroot'.DS.substr($file['path'],1)
+							));
+	}
+	
 /**
  * delete method
  *
