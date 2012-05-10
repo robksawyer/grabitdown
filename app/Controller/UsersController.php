@@ -269,10 +269,12 @@ class UsersController extends AppController {
 				} else {
 					//unset($data);
 					//$data['User']['active'] = 1;
+					$this->User->id = $data['User']['id'];
 					$this->User->save($data); //Save the data
 					//Log the user in with the auto generated password and then send them along to the create password page
-					$loginData['User'] = array('email'=>$email,'passwd'=>$passwd);
-					if($this->Auth->login($loginData)){
+					//$loginData['User'] = array('email'=>$email,'passwd'=>$passwd);
+					$this->request->data['User']['id'] = $this->User->id; 
+					if($this->Auth->login($this->request->data['User'])){
 						//The login was a success
 						$this->Session->setFlash(__d('users', 'Your e-mail has been validated!', true));
 						$this->Auth->loginRedirect = array('admin'=>false,'controller'=>'users','action'=>'create_password','email'=>urlencode($email));

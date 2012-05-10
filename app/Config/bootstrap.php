@@ -140,5 +140,3 @@ define('ROLE_USER', '4');
 //The role column in the DB
 define('USER_ROLE_KEY', 'role');
 
-// enable the Auth class
-App::uses('Auth', 'Tools.Lib');

@@ -22,6 +22,8 @@
 
 App::uses('Controller', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+// Enable the Auth class
+App::uses('Lib', 'Tools.Auth');
 /**
  * Application Controller
  *
@@ -49,6 +51,10 @@ class AppController extends Controller {
 	
 	public function beforeFilter() {
 		$this->Auth->allow('index', 'view');
+		
+		$logged_in = $this->Auth->loggedIn();
+		$current_user = $this->Auth->user();
+		$this->set(compact('logged_in','current_user'));
 	}
 	
 	/**

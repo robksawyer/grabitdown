@@ -38,7 +38,7 @@ class UploadsController extends AppController {
 	public function index() {
 		//Only show the uploads for the logged in user
 		$this->Upload->recursive = 0;
-		$auth = $this->Auth->user();
+	
 		if(empty($auth)){
 			$this->Session->setFlash(__('You must be logged in to view this page.'));
 			$this->redirect(array('controller'=>'users','action' => 'login'));

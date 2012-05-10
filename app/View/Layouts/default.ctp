@@ -53,9 +53,8 @@
 			<div id="user-panel">
 			<?php
 			//Check to see if the user is logged in
-			$auth = $this->Session->read('Auth.User');
-			if(!empty($auth)):	
-				echo $this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
+			if(!empty($logged_in)):	
+				echo 'Welcome '.$current_user['fullname']."! ".$this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
 			else:
 				echo $this->Html->link('Login',array('admin'=>false,'controller'=>'users','action'=>'login'));
 			endif; 
