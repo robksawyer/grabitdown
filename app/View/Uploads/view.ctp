@@ -70,9 +70,9 @@
 		<th><?php echo __('Upload'); ?></th>
 		<th><?php echo __('Token'); ?></th>
 		<th><?php echo __('Active'); ?></th>
+		<th><?php echo __('Download Count'); ?></th>
 		<th><?php echo __('User\'s IP'); ?></th>
 		<th><?php echo __('User\'s Location'); ?></th>
-		<th><?php echo __('Download Count'); ?></th>
 		<!--<th class="actions"><?php //echo __('Actions');?></th>-->
 	</tr>
 	<?php
@@ -84,12 +84,13 @@
 			<td><?php echo $upload['Upload']['name'];?></td>
 			<td><?php echo $code['token'];?></td>
 			<td><?php echo $code['active'];?></td>
+			<td><?php echo $code['download_count'];?></td>
 			<td><?php echo $code['ipAddress'];?></td>
 			<td><?php 
 				$location = ucwords(strtolower($code['cityName'].', '.$code['regionName'].' '.$code['countryName']));
 				echo $location;
 			?></td>
-			<td><?php echo $code['download_count'];?></td>
+			
 			<!--<td class="actions">
 				<?php //echo $this->Html->link(__('View'), array('controller' => 'codes', 'action' => 'view', $code['id'])); ?>
 				<?php //echo $this->Html->link(__('Edit'), array('controller' => 'codes', 'action' => 'edit', $code['id'])); ?>

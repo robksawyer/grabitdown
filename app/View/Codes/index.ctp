@@ -9,6 +9,7 @@
 			<th><?php echo $this->Paginator->sort('last_download_time');?></th>
 			<th><?php echo $this->Paginator->sort('downloaded_count');?></th>
 			<th><?php echo $this->Paginator->sort('ipAddress');?></th>
+			<th><?php echo $this->Paginator->sort('User\'s Location');?></th>
 			<!--<th><?php //echo $this->Paginator->sort('comment');?></th>-->
 			<!--<th class="actions"><?php //echo __('Actions');?></th>-->
 	</tr>
@@ -24,6 +25,10 @@
 		<td><?php echo h($code['Code']['last_download_time']); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['download_count']); ?>&nbsp;</td>
 		<td><?php echo h($code['Code']['ipAddress']); ?>&nbsp;</td>
+		<td><?php 
+			$location = ucwords(strtolower($code['cityName'].', '.$code['regionName'].' '.$code['countryName']));
+			echo $location;
+		?></td>
 		<!--<td><?php //echo h($code['Code']['comment']); ?>&nbsp;</td>-->
 		<!--<td class="actions">
 			<?php //echo $this->Html->link(__('View'), array('action' => 'view', $code['Code']['id'])); ?>
