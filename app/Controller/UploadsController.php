@@ -11,13 +11,6 @@ class UploadsController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('add','payment','paypal_set_ec','paypal_return','paypal_cancel');
-		$authUser = $this->Auth->user();
-		if(!empty($authUser['User'])){
-			$auth = $this->Upload->User->find('first',array(
-																			'conditions'=>array('User.email'=>$authUser['User']['email'])
-																			));
-			
-		}
 	}
 	
 	/**
@@ -38,13 +31,12 @@ class UploadsController extends AppController {
 	public function index() {
 		//Only show the uploads for the logged in user
 		$this->Upload->recursive = 0;
-	
-		if(empty($auth)){
+		if(!$this->logged_in){
 			$this->Session->setFlash(__('You must be logged in to view this page.'));
 			$this->redirect(array('controller'=>'users','action' => 'login'));
 		}
 		$this->paginate = array(
-									'conditions'=>array('Upload.user_id'=>$auth['id'])
+									'conditions'=>array('Upload.user_id'=>$this->current_user['id'])
 									);
 		$this->set('uploads', $this->paginate());
 		$this->set(compact('auth'));
@@ -57,6 +49,8 @@ class UploadsController extends AppController {
 	 * @return void
 	 */
 	public function view($id = null) {
+		$this->Upload->recursive = 0;
+		
 		$this->Upload->id = $id;
 		if (!$this->Upload->exists()) {
 			throw new NotFoundException(__('Invalid upload'));
@@ -84,8 +78,15 @@ class UploadsController extends AppController {
 			'Code.upload_id'=>$id,
 			'Code.active'=>1,
 		)));
-		
-		$this->set(compact('upload','active_codes'));
+		$all_codes = $this->Upload->Code->find('all',array('conditions'=>array(
+																										'Code.upload_id'=>$id
+																									),
+																			'fields'=>array('Code.download_count')
+																		)
+																	);
+		$all_codes = Set::format($all_codes,'{0}',array('{n}.Code.download_count'));
+		$total_downloads = array_sum($all_codes);
+		$this->set(compact('upload','active_codes','total_downloads'));
 	}
 	
 	/**

@@ -1,13 +1,18 @@
 <div class="uploads view">
 <h2><?php  echo __('Upload - '.$upload['Upload']['id']);?></h2>
 	<?php
-		$test_link = Router::url(array('controller'=>'uploads','action'=>'getit',$upload['Upload']['test_token']),true);
+		$test_link = Router::url(array('controller'=>'codes','action'=>'getit',$upload['User']['custom_path'],$upload['Upload']['id'],$upload['Upload']['test_token']),true);
 	?>
 	<div id="upload-overview">
 		<p class="test-url">You can test your download using <?php echo $this->Html->link($test_link,$test_link,array('target'=>'_blank')); ?></p>
 		<ul>
-			<li>Total Downloads: </li>
+			<li>Total Downloads: <?php echo $this->Number->format($total_downloads); ?></li>
 			<li>Active Codes: <?php echo $this->Number->format($active_codes); ?></li>
+			<li>Expiration date: <?php 
+				$creationDate = $this->Time->fromString($upload['Upload']['created']);
+				$expirationDate = date("F jS, Y",strtotime("+6 months",$creationDate));
+				echo $expirationDate;
+			?></li>
 		</ul>
 	</div>
 	
@@ -22,34 +27,9 @@
 			<?php echo h($upload['Upload']['path']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Path Alt'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['path_alt']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Caption'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['caption']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Slug'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['slug']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('User'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($upload['User']['custom_path'], array('controller' => 'users', 'action' => 'view', $upload['User']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Test Token'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['test_token']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Test Token Count'); ?></dt>
-		<dd>
-			<?php echo h($upload['Upload']['test_token_count']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Active'); ?></dt>
@@ -87,13 +67,13 @@
 	<?php if (!empty($upload['Code'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Upload Id'); ?></th>
+		<th><?php echo __('Upload'); ?></th>
 		<th><?php echo __('Token'); ?></th>
 		<th><?php echo __('Active'); ?></th>
-		<th><?php echo __('Modified'); ?></th>
-		<th><?php echo __('Created'); ?></th>
-		<th class="actions"><?php echo __('Actions');?></th>
+		<th><?php echo __('User\'s IP'); ?></th>
+		<th><?php echo __('User\'s Location'); ?></th>
+		<th><?php echo __('Download Count'); ?></th>
+		<!--<th class="actions"><?php //echo __('Actions');?></th>-->
 	</tr>
 	<?php
 		$i = 0;
@@ -101,17 +81,20 @@
 			$code = $code['Code'];
 		?>
 		<tr>
-			<td><?php echo $code['id'];?></td>
-			<td><?php echo $code['upload_id'];?></td>
+			<td><?php echo $upload['Upload']['name'];?></td>
 			<td><?php echo $code['token'];?></td>
 			<td><?php echo $code['active'];?></td>
-			<td><?php echo $code['modified'];?></td>
-			<td><?php echo $code['created'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'codes', 'action' => 'view', $code['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'codes', 'action' => 'edit', $code['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'codes', 'action' => 'delete', $code['id']), null, __('Are you sure you want to delete # %s?', $code['id'])); ?>
-			</td>
+			<td><?php echo $code['ipAddress'];?></td>
+			<td><?php 
+				$location = ucwords(strtolower($code['cityName'].', '.$code['regionName'].' '.$code['countryName']));
+				echo $location;
+			?></td>
+			<td><?php echo $code['download_count'];?></td>
+			<!--<td class="actions">
+				<?php //echo $this->Html->link(__('View'), array('controller' => 'codes', 'action' => 'view', $code['id'])); ?>
+				<?php //echo $this->Html->link(__('Edit'), array('controller' => 'codes', 'action' => 'edit', $code['id'])); ?>
+				<?php //echo $this->Form->postLink(__('Delete'), array('controller' => 'codes', 'action' => 'delete', $code['id']), null, __('Are you sure you want to delete # %s?', $code['id'])); ?>
+			</td>-->
 		</tr>
 	<?php endforeach; ?>
 	</table>

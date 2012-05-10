@@ -54,7 +54,7 @@
 			<?php
 			//Check to see if the user is logged in
 			if(!empty($logged_in)):	
-				echo 'Welcome '.$current_user['fullname']."! ".$this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
+				echo 'Welcome '.$this->Html->link($current_user['fullname'],array('controller'=>'uploads','action'=>'index','admin'=>false))."! ".$this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
 			else:
 				echo $this->Html->link('Login',array('admin'=>false,'controller'=>'users','action'=>'login'));
 			endif; 

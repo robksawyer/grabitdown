@@ -19,14 +19,15 @@ class CodesController extends AppController {
  * @return void
  */
 	public function index($upload_id=null) {
-		$this->Code->recursive = 0;
+		$this->Code->recursive = -1;
 		if(empty($upload_id)){
 			$this->Session->setFlash(__('The data provided was not valid.'));
 			$this->redirect(array('controller'=>'users','action' => 'login'));
 		}
 		$this->paginate = array(
 						'conditions'=>array('Code.upload_id'=>$upload_id),
-						'limit'=>'100'
+						'limit'=>'100',
+						'recursive'=>'-1'
 					);
 		$codes = $this->paginate();
 		$upload = $this->Code->Upload->find('first',array('conditions'=>array('Upload.id'=>$upload_id)));
@@ -100,11 +101,28 @@ class CodesController extends AppController {
 	public function getit($folder=null,$upload_id=null,$token=null){
 		//Find the upload_id and then path by searching the folder and code
 		//Find the code. If it exists check the folder
+		$testToken = false;
 		$code = $this->Code->find('first',array('conditions'=>array(
 				'Code.token'=>$token,
 				'Code.upload_id'=>$upload_id
-				)
+				),
+				'recursive' => '0'
 			));
+		//Try the test token
+		if(empty($code)){
+			$upload = $this->Code->Upload->find('first',array('conditions'=>array(
+					'Upload.test_token'=>$token,
+					'Upload.id'=>$upload_id
+					),
+					'recursive' => '0'
+				));
+			$code = $this->Code->find('first',array('conditions'=>array(
+					'Code.upload_id'=>$upload_id
+					),
+					'recursive' => '0'
+				));
+			$testToken = true;
+		}
 		if(empty($code)){
 			$this->Session->setFlash(__('Invalid code'));
 			$this->redirect(array('controller'=>'users','action' => 'login'));
@@ -178,11 +196,19 @@ class CodesController extends AppController {
 			
 			//Set basic info
 			$currentTime = date('Y-m-d H:i:s');
-			$this->Code->set(array(
-				'ipAddress' => $ip,
-				'download_count' => intval($code['Code']['download_count']) + 1,
-				'last_download_time' => $currentTime
-			));
+			if($testToken){
+				$this->Code->Upload->id = $upload_id;
+				$this->Code->Upload->set(array(
+					'test_token_count' => intval($upload['Upload']['test_token_count']) + 1
+				));
+				$this->Code->Upload->save();
+			}else{
+				$this->Code->set(array(
+					'ipAddress' => $ip,
+					'download_count' => intval($code['Code']['download_count']) + 1,
+					'last_download_time' => $currentTime
+				));
+			}
 			
 			//Save the updated data to the code record
 			if(!$this->Code->save()){
@@ -190,6 +216,8 @@ class CodesController extends AppController {
 				$this->Session->setFlash(__('The code could not be saved. Please, try again.'));
 			}
 			
+			//TODO: Possibly how the user some information on the view and then redirect to the download.
+			//$this->header("refresh:5; url='pagetoredirect.php'");
 			//Finally, download the file
 			$this->sendFile($upload);
 		}

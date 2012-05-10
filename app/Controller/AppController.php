@@ -48,19 +48,25 @@ class AppController extends Controller {
 											),'Session', 'Email', 'Cookie','RequestHandler');
 	public $helpers = array('Html', 'Form', 'Session','Number', 'Time', 'Text','Js' => array('Jquery'));
 	
+	public $logged_in = false;
+	public $current_user = array();
 	
 	public function beforeFilter() {
 		$this->Auth->allow('index', 'view');
 		
-		$logged_in = $this->Auth->loggedIn();
-		$current_user = $this->Auth->user();
+		$this->logged_in = $this->Auth->loggedIn();
+		$this->current_user = $this->Auth->user();
+		$logged_in = $this->logged_in;
+		$current_user = $this->current_user;
 		$this->set(compact('logged_in','current_user'));
 	}
 	
 	/**
 	 * Fires before the page is rendered
 	 */
-	public function beforeRender(){ }
+	public function beforeRender(){
+		
+	}
 	
 	/**
 	* Checks if the email is in the system and authenticated, if yes create the token
