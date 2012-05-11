@@ -10,7 +10,7 @@ class CodesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('getit');
+		$this->Auth->allow('getit','sendFile');
 	}
 	
 /**
@@ -206,6 +206,9 @@ class CodesController extends AppController {
 				));
 				$this->Code->Upload->save();
 			}else{
+				if(empty($code['Code']['download_count'])){
+					$code['Code']['download_count'] = 0;
+				}
 				$this->Code->set(array(
 					'ipAddress' => $ip,
 					'download_count' => intval($code['Code']['download_count']) + 1,
@@ -218,20 +221,34 @@ class CodesController extends AppController {
 				//Record failed to update.
 				$this->Session->setFlash(__('The code could not be saved. Please, try again.'));
 			}
-			
-			//TODO: Possibly how the user some information on the view and then redirect to the download.
-			//$this->header("refresh:5; url='pagetoredirect.php'");
-			//Finally, download the file
-			$this->sendFile($upload);
+		
+			//Set variables
+			$this->set(compact('upload','token'));
 		}
 	}
 	
 	/**
 	 * Download the file
 	 */
-	protected function sendFile($upload = null) {
+	public function sendFile($token=null,$upload_id = null) {
+		//TODO: Add some ip tracking here and disable if the user has already tried the download multiple times
+		if(empty($token)){
+			$this->Session->setFlash(__('There was an error finding your upload.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
+		if(empty($upload_id)){
+			$this->Session->setFlash(__('There was an error finding your upload.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
 		//Download the file
 		//http://www.dereuromark.de/2011/11/21/serving-views-as-files-in-cake2/
+		$upload = $this->Code->Upload->find('first',array('conditions'=>array('Upload.id'=>$upload_id),
+															'recursive'=>'-1'
+															));
+		if(empty($upload)){
+			$this->Session->setFlash(__('There was an error finding your upload.'));
+			$this->redirect(array('controller'=>'users','action' => 'login'));
+		}
 		$file = $upload['Upload'];
 		$this->viewClass = 'Media';
 		$this->set(array(

@@ -53,3 +53,35 @@ ul.info li span.price{
 	color: #000000;
 	font-style: italic;
 }
+.download.form .actions{
+	position: relative;
+	width: 500px !important;
+	clear: both !important;
+	padding: 40px !important;
+	margin: 0 !important;
+	border: 1px solid #999999;
+}
+.download.form .actions ul{
+	width: auto;
+}
+.download.form .actions ul li{
+	width: 200px !important;
+	text-align: center;
+	float: left;
+}
+.download.form .actions ul li.file-details{
+	margin: 0 50px 0 0;
+}
+.download.form .actions ul li a{
+	vertical-align: text-top;
+	margin-top: -5px;
+}
+.download.form .actions .file-expiration{
+	position: relative;
+	margin: 10px 0 0 0;
+	clear: both;
+	font-size: 11px;
+}
+.download.form .actions .file-expiration span{
+	font-weight: bold;
+}

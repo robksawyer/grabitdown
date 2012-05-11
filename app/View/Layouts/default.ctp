@@ -50,6 +50,18 @@
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($siteName, '/'); ?></h1>
+			<?php
+			$hide_user_panel = false;
+			//Check to make sure the panel should show on the view
+			$ignored_views = array('/users/login','/uploads/add');
+			foreach($ignored_views as $view){
+				if($view == $this->request->here){
+					$hide_user_panel = true;
+				}
+			}
+			
+			if(!$hide_user_panel):
+			?>
 			<div id="user-panel">
 			<?php
 			//Check to see if the user is logged in
@@ -57,9 +69,11 @@
 				echo 'Welcome '.$this->Html->link($current_user['fullname'],array('controller'=>'uploads','action'=>'index','admin'=>false))."! ".$this->Html->link('Logout',array('admin'=>false,'controller'=>'users','action'=>'logout'));
 			else:
 				echo $this->Html->link('Login',array('admin'=>false,'controller'=>'users','action'=>'login'));
+				echo " | ".$this->Html->link('Create Account',array('admin'=>false,'controller'=>'uploads','action'=>'add'));
 			endif; 
 			?>
 			</div>
+			<?php endif; ?>
 		</div>
 		<div id="content">
 			<?php echo $this->Session->flash(); ?>

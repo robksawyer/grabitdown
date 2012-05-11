@@ -79,8 +79,8 @@ class UploadsController extends AppController {
 			'Code.active'=>1,
 		)));
 		$all_codes = $this->Upload->Code->find('all',array('conditions'=>array(
-																										'Code.upload_id'=>$id
-																									),
+																				'Code.upload_id'=>$id
+																			),
 																			'fields'=>array('Code.download_count')
 																		)
 																	);
